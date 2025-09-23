@@ -2,15 +2,17 @@
 
 use Illuminate\Support\Facades\Route;
 
-
+// Dashboard
 Route::get('/', function () {
     return view('pages.dashboard');
-});
+})->name('dashboard');
 
-Route::get('/about', function(){
-    return view ('pages.about');
-});
+// About
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
 
-Route::get('/contact', function(){
-    return view ('pages.contact');
-});
+// Contact
+Route::get('/contact', function () {
+    return view('pages.contact');
+})->name('contact');

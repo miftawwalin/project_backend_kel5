@@ -1,38 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Kontak Kami | PT Metal Art Indonesia</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@extends('layouts.simple')
+@extends('layouts.navbar')
 
-  {{-- Navbar --}}
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="#">Kelompok 5</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-        data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" 
-        aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+@section('title', 'Contact')
 
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
-          <li class="nav-item"><a class="nav-link active" href="/contact">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  {{-- End Navbar --}}
-
-  <!-- Contact Section -->
-  <div class="container my-5">
+@section('content')
+<div class="container my-5">
     <div class="text-center mb-4">
       <h1 class="fw-bold">Hubungi Kami</h1>
       <p class="text-muted">Silakan tinggalkan pesan atau pertanyaan Anda melalui form di bawah ini.</p>
@@ -79,10 +51,4 @@
       </div>
     </div>
   </div>
-  <!-- End Contact Section -->
-
-  <!-- Bootstrap JS + Icons -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-</body>
-</html>
+@endsection
