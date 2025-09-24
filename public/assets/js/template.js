@@ -95,11 +95,11 @@
     });
 
 
-    // Sidebar theme settings
-    $("input:radio[name=sidebarThemeSettings]").click(function() {
-      $('body').removeClass('sidebar-light sidebar-dark');
-      $('body').addClass($(this).val());
-     })
+    // Sidebar theme settings - DISABLED (handled by theme-switcher.js)
+    // $("input:radio[name=sidebarThemeSettings]").click(function() {
+    //   $('body').removeClass('sidebar-light sidebar-dark');
+    //   $('body').addClass($(this).val());
+    //  })
 
 
 

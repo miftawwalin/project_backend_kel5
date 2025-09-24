@@ -30,8 +30,12 @@
 	<!-- endinject -->
 
   <!-- Layout styles -->  
-	<link rel="stylesheet" href="{{ asset('assets/css/demo1/style.css') }}">
+	<link id="theme-stylesheet" rel="stylesheet" href="{{ asset('assets/css/demo1/style.css') }}">
   <!-- End layout styles -->
+
+  <!-- Theme Switcher styles -->
+  <link rel="stylesheet" href="{{ asset('assets/css/theme-switcher.css') }}">
+  <!-- End Theme Switcher styles -->
 
   <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
 </head>
@@ -80,6 +84,14 @@
 	<!-- Custom js for this page -->
   <script src="{{ asset('assets/js/dashboard-light.js') }}"></script>
 	<!-- End custom js for this page -->
+
+	<!-- Theme Switcher -->
+	<script src="{{ asset('assets/js/theme-switcher.js') }}"></script>
+	<!-- End Theme Switcher -->
+
+	<!-- Settings Test (for debugging) -->
+	<script src="{{ asset('assets/js/settings-test.js') }}"></script>
+	<!-- End Settings Test -->
 
 </body>
 </html>
