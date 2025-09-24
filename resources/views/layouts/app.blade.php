@@ -39,13 +39,17 @@
 	<div class="main-wrapper">
 
 		<!-- partial:partials/_sidebar.html -->
-		@include('layouts.sidebar')
+		@include('partials._sidebar')
+		<!-- partial -->
+
+		<!-- partial:partials/_settings-sidebar.html -->
+		@include('partials._settings-sidebar')
 		<!-- partial -->
 	
 		<div class="page-wrapper">
 					
 			<!-- partial:partials/_navbar.html -->
-			@include('layouts.navbar')
+			@include('partials._navbar')
 			<!-- partial -->
 
 			<div class="page-content">
@@ -53,7 +57,7 @@
 			</div>
 
 			<!-- partial:partials/_footer.html -->
-			@include('layouts.footer')
+			@include('partials._footer')
 			<!-- partial -->
 		
 		</div>
