@@ -13,7 +13,7 @@
             <div class="card shadow-sm border-0 rounded-3">
               <div class="card-body">
                 <h5 class="card-title">Total Produk</h5>
-                <p class="card-text fs-4 fw-bold text-primary">120</p>
+                <p class="card-text fs-4 fw-bold text-primary">12000</p>
               </div>
             </div>
           </div>
