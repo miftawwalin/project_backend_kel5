@@ -23,67 +23,280 @@
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
-        <h6 class="card-title">User Request Form</h6>
-        <p class="text-muted mb-3">Fill out the form below to submit a user request.</p>
-        
-        <form>
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="userName" class="form-label">User Name</label>
-                <input type="text" class="form-control" id="userName" placeholder="Enter user name">
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="userEmail" class="form-label">Email</label>
-                <input type="email" class="form-control" id="userEmail" placeholder="Enter email">
-              </div>
+        <!-- Header Form -->
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label fw-bold">NO:</label>
+              <input type="text" class="form-control" placeholder="Enter number">
             </div>
           </div>
-          
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="requestType" class="form-label">Request Type</label>
-                <select class="form-select" id="requestType">
-                  <option selected disabled>Choose request type</option>
-                  <option value="new_user">New User Account</option>
-                  <option value="permission">Permission Change</option>
-                  <option value="reset_password">Password Reset</option>
-                  <option value="deactivate">Account Deactivation</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="mb-3">
-                <label for="priority" class="form-label">Priority</label>
-                <select class="form-select" id="priority">
-                  <option selected disabled>Choose priority</option>
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                  <option value="urgent">Urgent</option>
-                </select>
-              </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label fw-bold">DATE:</label>
+              <input type="date" class="form-control">
             </div>
           </div>
-          
-          <div class="mb-3">
-            <label for="description" class="form-label">Request Description</label>
-            <textarea class="form-control" id="description" rows="4" placeholder="Describe your request in detail"></textarea>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="mb-3">
+              <label class="form-label fw-bold">TO:</label>
+              <input type="text" class="form-control" placeholder="Recipient">
+            </div>
           </div>
-          
-          <div class="mb-3">
-            <label for="attachment" class="form-label">Attachment (Optional)</label>
-            <input type="file" class="form-control" id="attachment">
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="mb-3">
+              <label class="form-label fw-bold">FROM:</label>
+              <input type="text" class="form-control" placeholder="Sender">
+            </div>
           </div>
-          
+        </div>
+
+        <div class="row mb-4">
+          <div class="col-md-12">
+            <div class="mb-3">
+              <label class="form-label fw-bold">SUBJECT:</label>
+              <input type="text" class="form-control" placeholder="Subject">
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Form -->
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 5%">NO</th>
+                <th style="width: 25%">MATERIAL</th>
+                <th style="width: 15%">QUANTITY</th>
+                <th style="width: 15%">UNIT</th>
+                <th style="width: 20%">QUALITY</th>
+                <th style="width: 20%">REMARK</th>
+              </tr>
+            </thead>
+            <tbody id="requestTableBody">
+              <tr>
+                <td>1</td>
+                <td><input type="text" class="form-control border-0" placeholder="Enter material"></td>
+                <td><input type="number" class="form-control border-0" placeholder="Qty"></td>
+                <td><input type="text" class="form-control border-0" placeholder="Unit"></td>
+                <td>
+                  <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#qualityModal">
+                    QUALITY - 4500 TAP
+                  </button>
+                  <input type="hidden" name="quality[]" value="">
+                </td>
+                <td><input type="text" class="form-control border-0" placeholder="Remark"></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td><input type="text" class="form-control border-0" placeholder="Enter material"></td>
+                <td><input type="number" class="form-control border-0" placeholder="Qty"></td>
+                <td><input type="text" class="form-control border-0" placeholder="Unit"></td>
+                <td>
+                  <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#qualityModal">
+                    QUALITY - 4500 TAP
+                  </button>
+                  <input type="hidden" name="quality[]" value="">
+                </td>
+                <td><input type="text" class="form-control border-0" placeholder="Remark"></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td><input type="text" class="form-control border-0" placeholder="Enter material"></td>
+                <td><input type="number" class="form-control border-0" placeholder="Qty"></td>
+                <td><input type="text" class="form-control border-0" placeholder="Unit"></td>
+                <td>
+                  <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#qualityModal">
+                    QUALITY - 4500 TAP
+                  </button>
+                  <input type="hidden" name="quality[]" value="">
+                </td>
+                <td><input type="text" class="form-control border-0" placeholder="Remark"></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td><input type="text" class="form-control border-0" placeholder="Enter material"></td>
+                <td><input type="number" class="form-control border-0" placeholder="Qty"></td>
+                <td><input type="text" class="form-control border-0" placeholder="Unit"></td>
+                <td>
+                  <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#qualityModal">
+                    QUALITY - 4500 TAP
+                  </button>
+                  <input type="hidden" name="quality[]" value="">
+                </td>
+                <td><input type="text" class="form-control border-0" placeholder="Remark"></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td><input type="text" class="form-control border-0" placeholder="Enter material"></td>
+                <td><input type="number" class="form-control border-0" placeholder="Qty"></td>
+                <td><input type="text" class="form-control border-0" placeholder="Unit"></td>
+                <td>
+                  <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#qualityModal">
+                    QUALITY - 4500 TAP
+                  </button>
+                  <input type="hidden" name="quality[]" value="">
+                </td>
+                <td><input type="text" class="form-control border-0" placeholder="Remark"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Add Row Button -->
+        <div class="mb-3">
+          <button type="button" class="btn btn-outline-secondary" onclick="addRow()">
+            <i data-feather="plus"></i> Add Row
+          </button>
+        </div>
+
+        <!-- Signature Section -->
+        <div class="row mt-4">
+          <div class="col-md-4">
+            <div class="text-center border p-3">
+              <p class="mb-1 fw-bold">REQUESTED BY:</p>
+              <div style="height: 80px;"></div>
+              <hr>
+              <p class="mb-0">Name & Signature</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-center border p-3">
+              <p class="mb-1 fw-bold">APPROVED BY:</p>
+              <div style="height: 80px;"></div>
+              <hr>
+              <p class="mb-0">Name & Signature</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-center border p-3">
+              <p class="mb-1 fw-bold">RECEIVED BY:</p>
+              <div style="height: 80px;"></div>
+              <hr>
+              <p class="mb-0">Name & Signature</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Buttons -->
+        <div class="mt-4">
           <button type="submit" class="btn btn-primary me-2">Submit Request</button>
           <button type="button" class="btn btn-secondary">Cancel</button>
-        </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Quality Modal -->
+<div class="modal fade" id="qualityModal" tabindex="-1" aria-labelledby="qualityModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="qualityModalLabel">Select Quality</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="list-group">
+          <button type="button" class="list-group-item list-group-item-action" onclick="selectQuality('QUALITY - 4500 TAP')">
+            QUALITY - 4500 TAP
+          </button>
+          <button type="button" class="list-group-item list-group-item-action" onclick="selectQuality('QUALITY - 2500 TAP')">
+            QUALITY - 2500 TAP
+          </button>
+          <button type="button" class="list-group-item list-group-item-action" onclick="selectQuality('QUALITY - 2000 TAP')">
+            QUALITY - 2000 TAP
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentQualityButton = null;
+let rowCounter = 5;
+
+function selectQuality(quality) {
+  if (currentQualityButton) {
+    currentQualityButton.textContent = quality;
+    currentQualityButton.nextElementSibling.value = quality;
+  }
+  
+  // Close modal
+  const modal = bootstrap.Modal.getInstance(document.getElementById('qualityModal'));
+  modal.hide();
+}
+
+// Handle quality button clicks
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('btn-outline-primary') && e.target.textContent.includes('QUALITY')) {
+    currentQualityButton = e.target;
+  }
+});
+
+function addRow() {
+  rowCounter++;
+  const tableBody = document.getElementById('requestTableBody');
+  const newRow = document.createElement('tr');
+  
+  newRow.innerHTML = `
+    <td>${rowCounter}</td>
+    <td><input type="text" class="form-control border-0" placeholder="Enter material"></td>
+    <td><input type="number" class="form-control border-0" placeholder="Qty"></td>
+    <td><input type="text" class="form-control border-0" placeholder="Unit"></td>
+    <td>
+      <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#qualityModal">
+        QUALITY - 4500 TAP
+      </button>
+      <input type="hidden" name="quality[]" value="">
+    </td>
+    <td><input type="text" class="form-control border-0" placeholder="Remark"></td>
+  `;
+  
+  tableBody.appendChild(newRow);
+  
+  // Re-initialize feather icons
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+}
+</script>
+
+<style>
+.table td input.form-control.border-0 {
+  background: transparent;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0.375rem 0.5rem;
+}
+
+.table td input.form-control.border-0:focus {
+  background: #f8f9fa;
+  border: 1px solid #86b7fe !important;
+}
+
+.table th {
+  background-color: #f8f9fa !important;
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.signature-box {
+  min-height: 120px;
+  border: 1px solid #dee2e6;
+}
+</style>
 @endsection
