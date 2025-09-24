@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\product;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // Dashboard
@@ -31,3 +33,6 @@ Route::get('/about', function () {
 Route::get('/contact', function () {
     return view('pages.contact');
 })->name('contact');
+
+Route::get('/product',[ProductController::class,'index']);
+Route:get('/register')
