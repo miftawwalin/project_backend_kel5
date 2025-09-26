@@ -1,0 +1,315 @@
+/* Theme Switcher Styles */
+.settings-sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  right: -280px !important;
+  width: 280px !important;
+  height: 100vh !important;
+  background: #fff !important;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1) !important;
+  z-index: 9998 !important;
+  transition: right 0.3s ease !important;
+  overflow-y: auto !important;
+}
+
+.settings-open .settings-sidebar {
+  right: 0 !important;
+}
+
+.settings-sidebar-toggler {
+  position: fixed !important;
+  top: 50% !important;
+  right: 0 !important;
+  width: 40px !important;
+  height: 40px !important;
+  background: #6571ff !important;
+  color: #fff !important;
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 6px 0 0 6px !important;
+  z-index: 9999 !important;
+  transition: all 0.3s ease !important;
+  transform: translateY(-50%) !important;
+  cursor: pointer !important;
+  box-shadow: -2px 0 10px rgba(101, 113, 255, 0.3) !important;
+  pointer-events: auto !important;
+  user-select: none !important;
+}
+
+.settings-sidebar-toggler:hover {
+  background: #5a67d8;
+  color: #fff;
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: -4px 0 15px rgba(101, 113, 255, 0.5);
+}
+
+.settings-sidebar-toggler:active,
+.settings-sidebar-toggler.clicked {
+  transform: translateY(-50%) scale(0.95);
+  background: #4c63d2;
+}
+
+.settings-sidebar-toggler:focus {
+  outline: none;
+  box-shadow: -2px 0 10px rgba(101, 113, 255, 0.3), 0 0 0 3px rgba(101, 113, 255, 0.2);
+}
+
+.settings-open .settings-sidebar-toggler {
+  right: 280px !important;
+}
+
+/* Debug: Make sure the button is always visible */
+.settings-sidebar-toggler {
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.settings-sidebar-toggler svg,
+.settings-sidebar-toggler i {
+  width: 18px !important;
+  height: 18px !important;
+  color: #fff !important;
+}
+
+.settings-sidebar .sidebar-body {
+  padding: 1.5rem;
+}
+
+.theme-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.theme-item {
+  display: block;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.theme-item:hover {
+  border-color: #6571ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(101, 113, 255, 0.2);
+}
+
+.theme-item.active {
+  border-color: #6571ff;
+  box-shadow: 0 4px 12px rgba(101, 113, 255, 0.3);
+}
+
+.theme-item.active::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #6571ff;
+  color: #fff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.theme-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 6px;
+}
+
+/* Dark theme adjustments */
+.theme-dark .settings-sidebar {
+  background: #1a1d29;
+  color: #d0d6e1;
+}
+
+.theme-dark .settings-sidebar .text-muted {
+  color: #7987a1 !important;
+}
+
+.theme-dark .settings-sidebar .border-bottom {
+  border-color: #2a2f3f !important;
+}
+
+/* Sidebar theme visual feedback */
+.sidebar-dark .sidebar {
+  background: #1a1d29 !important;
+}
+
+.sidebar-dark .sidebar .sidebar-header {
+  background: #1a1d29 !important;
+  border-bottom: 1px solid #2a2f3f !important;
+}
+
+.sidebar-dark .sidebar .sidebar-header .sidebar-brand {
+  color: #d0d6e1 !important;
+}
+
+.sidebar-dark .sidebar .sidebar-body {
+  background: #1a1d29 !important;
+}
+
+.sidebar-dark .sidebar .sidebar-body .nav .nav-item .nav-link {
+  color: #7987a1 !important;
+}
+
+.sidebar-dark .sidebar .sidebar-body .nav .nav-item .nav-link:hover,
+.sidebar-dark .sidebar .sidebar-body .nav .nav-item.active .nav-link {
+  color: #d0d6e1 !important;
+  background: #2a2f3f !important;
+}
+
+.sidebar-dark .sidebar .sidebar-body .nav .nav-item.nav-category {
+  color: #5a6c7d !important;
+}
+
+/* Light sidebar theme (default) */
+.sidebar-light .sidebar {
+  background: #fff !important;
+}
+
+.sidebar-light .sidebar .sidebar-header {
+  background: #fff !important;
+  border-bottom: 1px solid #e9ecef !important;
+}
+
+.sidebar-light .sidebar .sidebar-header .sidebar-brand {
+  color: #212529 !important;
+}
+
+.sidebar-light .sidebar .sidebar-body {
+  background: #fff !important;
+}
+
+.sidebar-light .sidebar .sidebar-body .nav .nav-item .nav-link {
+  color: #7987a1 !important;
+}
+
+.sidebar-light .sidebar .sidebar-body .nav .nav-item .nav-link:hover,
+.sidebar-light .sidebar .sidebar-body .nav .nav-item.active .nav-link {
+  color: #212529 !important;
+  background: #f8f9fa !important;
+}
+
+.theme-dark .form-check-input:checked {
+  background-color: #6571ff;
+  border-color: #6571ff;
+}
+
+/* Animation for theme switching */
+.theme-switching {
+  transition: all 0.3s ease;
+}
+
+/* Overlay for settings sidebar */
+.settings-open::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1049;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .settings-sidebar {
+    width: 100%;
+    right: -100%;
+  }
+  
+  .settings-open .settings-sidebar {
+    right: 0;
+  }
+  
+  .settings-open .settings-sidebar-toggler {
+    right: 0;
+  }
+}
+
+/* Form check styling for better visibility */
+.form-check-input:checked {
+  background-color: #6571ff;
+  border-color: #6571ff;
+}
+
+.form-check-input:focus {
+  border-color: #6571ff;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(101, 113, 255, 0.25);
+}
+
+/* Theme transition effects */
+.main-wrapper {
+  transition: all 0.3s ease;
+}
+
+/* Loading state */
+.theme-loading {
+  pointer-events: none;
+  position: relative;
+}
+
+.theme-loading::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.theme-dark.theme-loading::after {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Smooth transitions */
+.main-wrapper,
+.sidebar,
+.navbar,
+.page-content,
+.footer {
+  transition: all 0.3s ease;
+}
+
+/* Theme switching animation */
+@keyframes themeSwitch {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.theme-switching {
+  animation: themeSwitch 0.3s ease;
+}

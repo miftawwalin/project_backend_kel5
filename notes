@@ -1,0 +1,7 @@
+dir vendor
+# Langkah ini membersihkan cache Composer
+composer clear-cache
+# Ini akan menghapus file composer.lock yang sudah ada
+del composer.lock
+# Ini akan memastikan semua dependensi diunduh dari awal dan membuat folder vendor
+composer install
