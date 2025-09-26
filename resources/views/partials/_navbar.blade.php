@@ -13,11 +13,11 @@
       </div>
     </form>
     <ul class="navbar-nav">
-      <li class="nav-item dropdown">
+      <!-- <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="flag-icon flag-icon-id mt-1" title="id"></i> <span class="ms-1 me-1 d-none d-md-inline">Kelompok 5 - Backend Project</span>
+        <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" style="width: 100%; height: 100%; object-fit: contain; border-radius: 8px; margin-right: 10px;">
         </a>
-      </li>
+      </li> -->
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="appsDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <i data-feather="grid"></i>

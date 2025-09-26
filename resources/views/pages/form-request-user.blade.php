@@ -18,9 +18,9 @@
           <!-- Company Info -->
           <div>
             <h5 class="mb-1 fw-bold">PT. METALART ASTRA INDONESIA</h5>
-            <p class="mb-0 small text-muted">To the white hope and harmony of the technology and human being</p>
-            <p class="mb-0 small">Kawasan Industri KIIC, Jl. Harapan Raya Lot GG-1, Desa Walahar, Kecamatan Klari, Karawang 41371, Jawa Barat</p>
-            <p class="mb-0 small">Phone: (021) 123-4567 | Fax: (021) 123-4568</p>
+            <p class="mb-0 small text-muted">To the infinite development and harmony of the technology and human being</p>
+            <p class="mb-0 small">Kawasan Industri KIIC, Jl. Harapan III No.Lot JJ-2A, Sirnabaya, Telukjambe Timur, Karawang, Jawa Barat 41361</p>
+            <p class="mb-0 small">Telp : (021)29369960, (0267)78639862 | Fax: (021)29369965</p>
           </div>
         </div>
         <!-- PRODUKSI Section -->
