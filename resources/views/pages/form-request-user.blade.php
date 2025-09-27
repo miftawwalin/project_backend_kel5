@@ -10,17 +10,15 @@
       <div class="d-flex align-items-center justify-content-between p-3" style="background-color: #f8f9fa; border: 1px solid #dee2e6;">
         <div class="d-flex align-items-center">
           <!-- Company Logo -->
-          <div class="me-3">
-            <div style="width: 60px; height: 60px; background: linear-gradient(45deg, #007bff, #dc3545); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 24px;">
-              M
-            </div>
+          <div class="me-4">
+            <img src="{{ asset('assets/images/mai.png') }}" alt="PT. METALART ASTRA INDONESIA Logo" style="width: 120px; height: auto; object-fit: contain;">
           </div>
           <!-- Company Info -->
-          <div>
-            <h5 class="mb-1 fw-bold">PT. METALART ASTRA INDONESIA</h5>
-            <p class="mb-0 small text-muted">To the infinite development and harmony of the technology and human being</p>
-            <p class="mb-0 small">Kawasan Industri KIIC, Jl. Harapan III No.Lot JJ-2A, Sirnabaya, Telukjambe Timur, Karawang, Jawa Barat 41361</p>
-            <p class="mb-0 small">Telp : (021)29369960, (0267)78639862 | Fax: (021)29369965</p>
+          <div class="flex-grow-1">
+            <p class="mb-1 small text-primary fw-semibold">To the infinite development and harmony of the technology and human being</p>
+            <h4 class="mb-2 fw-bold text-dark">PT. METALART ASTRA INDONESIA</h4>
+            <p class="mb-1 small text-muted">Kawasan Industri KIIC, Jl. Harapan III Lot-JJ2A, Desa Sirnabaya, Kecamatan Teluk Jambe Timur, Karawang 41631 Jawa Barat</p>
+            <p class="mb-0 small text-muted">Telp : (021) 2936 9960, (0267) 78639862 | Fax : (021) 29369965</p>
           </div>
         </div>
         <!-- PRODUKSI Section -->
