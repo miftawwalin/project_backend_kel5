@@ -58,6 +58,13 @@
           </div>
         </div>
 
+        <!-- Request Item Button -->
+        <div class="mb-3">
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#requestItemModal">
+            <i data-feather="plus"></i> REQUEST ITEM
+          </button>
+        </div>
+
         <!-- Item Request Table -->
         <div class="table-responsive">
           <table class="table table-bordered">
@@ -73,96 +80,7 @@
               </tr>
             </thead>
             <tbody id="requestTableBody">
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">1</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">2</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">3</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">4</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">5</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">6</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">7</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">8</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">9</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
-              <tr>
-                <td class="text-center fw-bold" style="border: 1px solid #000;">10</td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-                <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-                <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-              </tr>
+              <!-- Data akan ditambahkan melalui modal -->
             </tbody>
           </table>
         </div>
@@ -203,8 +121,67 @@
   </div>
 </div>
 
+<!-- REQUEST ITEM Modal -->
+<div class="modal fade" id="requestItemModal" tabindex="-1" aria-labelledby="requestItemModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="requestItemModalLabel">Request Item</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="requestItemForm">
+          <div class="mb-3">
+            <label for="itemCode" class="form-label fw-bold">Item Code <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="itemCode" name="itemCode" required>
+          </div>
+          <div class="mb-3">
+            <label for="namaBarang" class="form-label fw-bold">Nama Barang</label>
+            <input type="text" class="form-control" id="namaBarang" name="namaBarang" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="loc" class="form-label fw-bold">LOC</label>
+            <input type="text" class="form-control" id="loc" name="loc" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="qty" class="form-label fw-bold">QTY <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="qty" name="qty" min="1" required>
+          </div>
+          <div class="mb-3">
+            <label for="uom" class="form-label fw-bold">UOM</label>
+            <input type="text" class="form-control" id="uom" name="uom" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="npkNama" class="form-label fw-bold">NPK / Nama <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="npkNama" name="npkNama" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" onclick="addRequestItem()">Add Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
-let rowCounter = 10;
+let rowCounter = 0;
+let requestItems = [];
+
+// Sample data untuk simulasi database
+const itemDatabase = {
+  'ITEM001': { namaBarang: 'Bolt M8x20', loc: 'A1-B2', uom: 'PCS' },
+  'ITEM002': { namaBarang: 'Nut M8', loc: 'A1-B3', uom: 'PCS' },
+  'ITEM003': { namaBarang: 'Washer M8', loc: 'A1-B4', uom: 'PCS' },
+  'ITEM004': { namaBarang: 'Screw Driver', loc: 'A2-C1', uom: 'PCS' },
+  'ITEM005': { namaBarang: 'Safety Gloves', loc: 'A2-C2', uom: 'PAIR' },
+  'ITEM006': { namaBarang: 'Safety Helmet', loc: 'A2-C3', uom: 'PCS' },
+  'ITEM007': { namaBarang: 'Welding Rod 3.2mm', loc: 'A3-D1', uom: 'KG' },
+  'ITEM008': { namaBarang: 'Cutting Disc 4 inch', loc: 'A3-D2', uom: 'PCS' },
+  'ITEM009': { namaBarang: 'Grinding Disc 4 inch', loc: 'A3-D3', uom: 'PCS' },
+  'ITEM010': { namaBarang: 'Paint Brush 2 inch', loc: 'A4-E1', uom: 'PCS' }
+};
 
 function selectProduksi(produksi) {
   const produksiButton = document.getElementById('produksiButton');
@@ -217,27 +194,99 @@ function selectProduksi(produksi) {
   modal.hide();
 }
 
-function addRow() {
-  rowCounter++;
-  const tableBody = document.getElementById('requestTableBody');
-  const newRow = document.createElement('tr');
+// Auto-fill function untuk item code
+function handleItemCodeChange() {
+  const itemCode = document.getElementById('itemCode').value.toUpperCase();
+  const namaBarang = document.getElementById('namaBarang');
+  const loc = document.getElementById('loc');
+  const uom = document.getElementById('uom');
   
-  newRow.innerHTML = `
-    <td class="text-center fw-bold" style="border: 1px solid #000;">${rowCounter}</td>
-    <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Item Code"></td>
-    <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="Nama Barang"></td>
-    <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="LOC"></td>
-    <td style="border: 1px solid #000;"><input type="number" class="form-control border-0" placeholder="Qty"></td>
-    <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="UOM"></td>
-    <td style="border: 1px solid #000;"><input type="text" class="form-control border-0" placeholder="NPK / Nama"></td>
-  `;
-  
-  tableBody.appendChild(newRow);
-  
-  // Re-initialize feather icons
-  if (typeof feather !== 'undefined') {
-    feather.replace();
+  if (itemDatabase[itemCode]) {
+    namaBarang.value = itemDatabase[itemCode].namaBarang;
+    loc.value = itemDatabase[itemCode].loc;
+    uom.value = itemDatabase[itemCode].uom;
+  } else {
+    namaBarang.value = '';
+    loc.value = '';
+    uom.value = '';
   }
+}
+
+// Add request item to table
+function addRequestItem() {
+  const itemCode = document.getElementById('itemCode').value;
+  const namaBarang = document.getElementById('namaBarang').value;
+  const loc = document.getElementById('loc').value;
+  const qty = document.getElementById('qty').value;
+  const uom = document.getElementById('uom').value;
+  const npkNama = document.getElementById('npkNama').value;
+  
+  // Validation
+  if (!itemCode || !qty || !npkNama) {
+    alert('Please fill in all required fields!');
+    return;
+  }
+  
+  if (!namaBarang || !loc || !uom) {
+    alert('Item Code not found in database!');
+    return;
+  }
+  
+  // Add to request items array
+  const newItem = {
+    id: Date.now(),
+    itemCode: itemCode,
+    namaBarang: namaBarang,
+    loc: loc,
+    qty: qty,
+    uom: uom,
+    npkNama: npkNama
+  };
+  
+  requestItems.push(newItem);
+  
+  // Update table
+  updateTable();
+  
+  // Clear form
+  document.getElementById('requestItemForm').reset();
+  
+  // Close modal
+  const modal = bootstrap.Modal.getInstance(document.getElementById('requestItemModal'));
+  modal.hide();
+}
+
+// Update table with request items
+function updateTable() {
+  const tableBody = document.getElementById('requestTableBody');
+  tableBody.innerHTML = '';
+  
+  requestItems.forEach((item, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td class="text-center fw-bold" style="border: 1px solid #000;">${index + 1}</td>
+      <td style="border: 1px solid #000;">${item.itemCode}</td>
+      <td style="border: 1px solid #000;">${item.namaBarang}</td>
+      <td style="border: 1px solid #000;">${item.loc}</td>
+      <td style="border: 1px solid #000;">${item.qty}</td>
+      <td style="border: 1px solid #000;">${item.uom}</td>
+      <td style="border: 1px solid #000;">${item.npkNama}</td>
+    `;
+    tableBody.appendChild(row);
+  });
+}
+
+// Add event listener for item code input
+document.addEventListener('DOMContentLoaded', function() {
+  const itemCodeInput = document.getElementById('itemCode');
+  if (itemCodeInput) {
+    itemCodeInput.addEventListener('input', handleItemCodeChange);
+  }
+});
+
+function addRow() {
+  // This function is now replaced by the modal functionality
+  alert('Please use the "REQUEST ITEM" button to add items to the table.');
 }
 </script>
 
