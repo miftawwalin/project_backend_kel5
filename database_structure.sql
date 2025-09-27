@@ -64,7 +64,28 @@ CREATE TABLE `users` (
   UNIQUE KEY `npk` (`npk`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 5. Tabel untuk menyimpan log aktivitas
+-- 5. Tabel untuk menyimpan inventory movements (GR/GI)
+CREATE TABLE `inventory_movements` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `item_id` int(11) NOT NULL,
+  `movement_type` enum('GR','GI') NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `movement_date` date NOT NULL,
+  `reference_number` varchar(100),
+  `notes` text,
+  `user_id` int(11),
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `item_id` (`item_id`),
+  KEY `movement_type` (`movement_type`),
+  KEY `movement_date` (`movement_date`),
+  KEY `user_id` (`user_id`),
+  FOREIGN KEY (`item_id`) REFERENCES `items` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 6. Tabel untuk menyimpan log aktivitas
 CREATE TABLE `activity_logs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `request_form_id` int(11),
@@ -79,23 +100,23 @@ CREATE TABLE `activity_logs` (
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Sample data untuk tabel items (sesuaikan dengan kebutuhan)
+-- Sample data untuk tabel items berdasarkan data inventory 2025
 INSERT INTO `items` (`item_code`, `nama_barang`, `loc`, `uom`, `description`) VALUES
+('SBM-001-002-0000002', 'ZERUST YELLOW FERROUS VCI FILM SHEET', 'D-5-1(A.1)', 'Pcs', 'Zerust yellow ferrous VCI film sheet untuk proteksi korosi'),
+('SBM-001-003-0000001', 'ANTI-RUST OIL TBS-3215', 'OIL AREA', 'Ltr', 'Anti-rust oil TBS-3215 untuk proteksi logam'),
+('SBM-001-004-0000001', 'LITHIUM GREASE EP.O', 'D-1-4 (E.2)', 'CAN', 'Lithium grease extreme pressure untuk pelumasan'),
+('SBM-001-005-0000001', 'DESICANT SUNDRY II 60 GRAM', 'D-5-1(A.1)', 'Pcs', 'Desicant sundry II 60 gram untuk penyerap kelembaban'),
+('SBM-001-006-0000001', 'W-4C ANTI CORROSIVE (18 L/CAN)', 'OIL AREA', 'CAN', 'W-4C anti corrosive 18 liter per can'),
+('SBM-001-007-0000001', 'SOLAR', 'D-1-4 (E.2)', 'Ltr', 'Bahan bakar solar untuk mesin'),
+('SBM-001-008-0000001', 'CUTTING OIL', 'E-2-4 (C.1)', 'DRUM', 'Cutting oil untuk proses pemotongan'),
+('SBM-001-009-0000001', 'HYDRAULIC OIL', 'OIL AREA', 'GALON', 'Hydraulic oil untuk sistem hidrolik'),
+('SBM-001-010-0000001', 'CLEANING SOLVENT', 'D-5-1(A.1)', 'Pail', 'Cleaning solvent untuk pembersihan'),
+('SBM-001-011-0000001', 'LUBRICATING OIL', 'D-1-4 (E.2)', 'BTL', 'Lubricating oil untuk pelumasan mesin'),
 ('ITEM001', 'Bolt M8x20', 'A1-B2', 'PCS', 'Bolt ukuran M8 panjang 20mm'),
 ('ITEM002', 'Nut M8', 'A1-B3', 'PCS', 'Nut ukuran M8'),
 ('ITEM003', 'Washer M8', 'A1-B4', 'PCS', 'Washer ukuran M8'),
 ('ITEM004', 'Screw Driver', 'A2-C1', 'PCS', 'Obeng untuk berbagai ukuran'),
-('ITEM005', 'Safety Gloves', 'A2-C2', 'PAIR', 'Sarung tangan keselamatan'),
-('ITEM006', 'Safety Helmet', 'A2-C3', 'PCS', 'Helm keselamatan kerja'),
-('ITEM007', 'Welding Rod 3.2mm', 'A3-D1', 'KG', 'Kawat las diameter 3.2mm'),
-('ITEM008', 'Cutting Disc 4 inch', 'A3-D2', 'PCS', 'Mata gerinda potong 4 inch'),
-('ITEM009', 'Grinding Disc 4 inch', 'A3-D3', 'PCS', 'Mata gerinda asah 4 inch'),
-('ITEM010', 'Paint Brush 2 inch', 'A4-E1', 'PCS', 'Kuas cat ukuran 2 inch'),
-('ITEM011', 'Safety Shoes', 'A2-C4', 'PAIR', 'Sepatu keselamatan kerja'),
-('ITEM012', 'Safety Goggles', 'A2-C5', 'PCS', 'Kacamata keselamatan'),
-('ITEM013', 'Measuring Tape 5m', 'A2-C6', 'PCS', 'Meteran ukur 5 meter'),
-('ITEM014', 'Level Tool', 'A2-C7', 'PCS', 'Alat ukur level'),
-('ITEM015', 'Hammer 500g', 'A2-C8', 'PCS', 'Palu berat 500 gram');
+('ITEM005', 'Safety Gloves', 'A2-C2', 'PAIR', 'Sarung tangan keselamatan');
 
 -- Sample data untuk tabel users
 INSERT INTO `users` (`npk`, `nama`, `department`, `position`, `email`, `phone`) VALUES
@@ -120,6 +141,17 @@ INSERT INTO `request_items` (`request_form_id`, `item_id`, `qty`, `npk_nama`) VA
 (2, 5, 5, 'NPK003 - Mike Johnson'),
 (3, 6, 3, 'NPK005 - David Brown'),
 (3, 7, 10, 'NPK005 - David Brown');
+
+-- Sample data untuk inventory movements (GR = Good Receipt, GI = Good Issue)
+INSERT INTO `inventory_movements` (`item_id`, `movement_type`, `quantity`, `movement_date`, `reference_number`, `notes`, `user_id`) VALUES
+-- GR September 2024
+(4, 'GR', 2640, '2024-09-15', 'GR-2024-001', 'Pembelian desicant sundry II', 2),
+(5, 'GR', 2, '2024-09-20', 'GR-2024-002', 'Pembelian W-4C anti corrosive', 2),
+(6, 'GR', 5000, '2024-09-25', 'GR-2024-003', 'Pembelian solar', 2),
+-- GI September 2024
+(4, 'GI', 3210, '2024-09-28', 'GI-2024-001', 'Penggunaan untuk produksi', 1),
+(5, 'GI', 3, '2024-09-30', 'GI-2024-002', 'Penggunaan untuk maintenance', 5),
+(6, 'GI', 2945, '2024-09-30', 'GI-2024-003', 'Penggunaan untuk mesin produksi', 1);
 
 -- Index untuk optimasi query
 CREATE INDEX `idx_items_item_code` ON `items` (`item_code`);

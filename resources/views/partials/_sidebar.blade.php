@@ -56,6 +56,31 @@
         </a>
       </li>
       
+      <li class="nav-item nav-category">Data Master</li>
+      <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="collapse" href="#dataMaster" role="button" aria-expanded="false" aria-controls="dataMaster">
+          <i class="link-icon" data-feather="database"></i>
+          <span class="link-title">Inventory Management</span>
+          <i class="link-arrow" data-feather="chevron-down"></i>
+        </a>
+        <div class="collapse" id="dataMaster">
+          <ul class="nav sub-menu">
+            <li class="nav-item">
+              <a href="{{ route('inventory-dashboard') }}" class="nav-link {{ request()->routeIs('inventory-dashboard*') ? 'active' : '' }}">Inventory Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('inventory-items') }}" class="nav-link {{ request()->routeIs('inventory-items*') ? 'active' : '' }}">Master Items</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('inventory-movements') }}" class="nav-link {{ request()->routeIs('inventory-movements*') ? 'active' : '' }}">Stock Movements</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('inventory-reports') }}" class="nav-link {{ request()->routeIs('inventory-reports*') ? 'active' : '' }}">Inventory Reports</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      
       <li class="nav-item nav-category">Reports</li>
       <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#reports" role="button" aria-expanded="false" aria-controls="reports">
