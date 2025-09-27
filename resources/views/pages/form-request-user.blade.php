@@ -173,40 +173,6 @@
             <i data-feather="plus"></i> Add Row
           </button>
         </div>
-
-        <!-- Signature Section -->
-        <div class="row mt-4">
-          <div class="col-md-4">
-            <div class="text-center border p-3">
-              <p class="mb-1 fw-bold">REQUESTED BY:</p>
-              <div style="height: 80px;"></div>
-              <hr>
-              <p class="mb-0">Name & Signature</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="text-center border p-3">
-              <p class="mb-1 fw-bold">APPROVED BY:</p>
-              <div style="height: 80px;"></div>
-              <hr>
-              <p class="mb-0">Name & Signature</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="text-center border p-3">
-              <p class="mb-1 fw-bold">RECEIVED BY:</p>
-              <div style="height: 80px;"></div>
-              <hr>
-              <p class="mb-0">Name & Signature</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Submit Buttons -->
-        <div class="mt-4">
-          <button type="submit" class="btn btn-primary me-2">Submit Request</button>
-          <button type="button" class="btn btn-secondary">Cancel</button>
-        </div>
       </div>
     </div>
   </div>
