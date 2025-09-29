@@ -1,14 +1,13 @@
-@extends('layouts.simple')
-@include('layouts.navbar')
+@extends('layouts.app')
 
-@section('title', 'About')
+@section('title', 'about')
 
 @section('content')
 <div class="container my-5">
     <div class="row align-items-center g-5">
       <!-- Gambar -->
       <div class="col-lg-6">
-        <img src="{{ asset('img/pabrik.jpeg') }}" 
+        <img src="{{ asset('assets/images/mai.png') }}" 
      alt="Pabrik PT Metal Art Indonesia" 
      class="img-fluid rounded "
      style="max-height: 300px; width: 70%; object-fit: cover;">

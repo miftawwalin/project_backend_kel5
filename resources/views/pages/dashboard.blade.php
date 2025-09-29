@@ -21,8 +21,8 @@
           <div class="col-md-4">
             <div class="card shadow-sm border-0 rounded-3">
               <div class="card-body">
-                <h5 class="card-title">Penjualan Bulan Ini</h5>
-                <p class="card-text fs-4 fw-bold text-success">Rp 15.000.000</p>
+                <h5 class="card-title">Barang keluar bulan ini</h5>
+                <p class="card-text fs-4 fw-bold text-success">500.000</p>
               </div>
             </div>
           </div>
@@ -40,5 +40,8 @@
       </div>
     </div>
   </div>
+  
+</form>
+
 
 @endsection

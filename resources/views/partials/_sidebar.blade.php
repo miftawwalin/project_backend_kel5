@@ -2,7 +2,7 @@
 <nav class="sidebar">
   <div class="sidebar-header">
     <a href="{{ route('dashboard') }}" class="sidebar-brand">
-      Kelompok<span>5</span>
+    <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" style="width: 165px; height: 100%; object-fit: contain; border-radius: 5px; margin-right: 8px;">
     </a>
     <div class="sidebar-toggler not-active">
       <span></span>
@@ -33,7 +33,8 @@
               <a href="{{ route('informasi-stock') }}" class="nav-link {{ request()->routeIs('informasi-stock*') ? 'active' : '' }}">Stock Information</a>
             </li>
             <li class="nav-item">
-              <a href="#" class="nav-link">Add Product</a>
+              <a href="{{ route('add-product') }}" class="nav-link {{ request()->routeIs('add-product*') ? 'active' : '' }}">Add Product</a>
+              
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link">Categories</a>
@@ -54,6 +55,31 @@
           <i class="link-icon" data-feather="users"></i>
           <span class="link-title">User Management</span>
         </a>
+      </li>
+      
+      <li class="nav-item nav-category">Data Master</li>
+      <li class="nav-item">
+        <a class="nav-link" data-bs-toggle="collapse" href="#dataMaster" role="button" aria-expanded="false" aria-controls="dataMaster">
+          <i class="link-icon" data-feather="database"></i>
+          <span class="link-title">Inventory Management</span>
+          <i class="link-arrow" data-feather="chevron-down"></i>
+        </a>
+        <div class="collapse" id="dataMaster">
+          <ul class="nav sub-menu">
+            <li class="nav-item">
+              <a href="{{ route('inventory-dashboard') }}" class="nav-link {{ request()->routeIs('inventory-dashboard*') ? 'active' : '' }}">Inventory Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('inventory-items') }}" class="nav-link {{ request()->routeIs('inventory-items*') ? 'active' : '' }}">Master Items</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('inventory-movements') }}" class="nav-link {{ request()->routeIs('inventory-movements*') ? 'active' : '' }}">Stock Movements</a>
+            </li>
+            <li class="nav-item">
+              <a href="{{ route('inventory-reports') }}" class="nav-link {{ request()->routeIs('inventory-reports*') ? 'active' : '' }}">Inventory Reports</a>
+            </li>
+          </ul>
+        </div>
       </li>
       
       <li class="nav-item nav-category">Reports</li>
@@ -102,3 +128,4 @@
     </ul>
   </div>
 </nav>
+

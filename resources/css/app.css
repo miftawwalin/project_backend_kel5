@@ -60,6 +60,22 @@ textarea:focus[data-flux-control],
 select:focus[data-flux-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
+.table {
+    font-size: 14px;
+}
+.table th {
+    font-weight: 600;
+    color: #666;
+}
+.table td {
+    color: #333;
+}
+.badge {
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
 
 /* \[:where(&)\]:size-4 {
     @apply size-4;

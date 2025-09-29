@@ -1,7 +1,6 @@
-@extends('layouts.simple')
-@extends('layouts.navbar')
+@extends('layouts.app')
 
-@section('title', 'Contact')
+@section('title', 'Form Request Barang Warehouse Consumable')
 
 @section('content')
 <div class="container my-5">

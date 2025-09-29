@@ -145,7 +145,7 @@
           <table class="table table-hover mb-0">
             <thead>
               <tr>
-                <th class="pt-0">#</th>
+                <th class="pt-0">ID</th>
                 <th class="pt-0">Item Name</th>
                 <th class="pt-0">SKU</th>
                 <th class="pt-0">Category</th>
