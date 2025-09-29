@@ -125,6 +125,22 @@
           </ul>
         </div>
       </li>
+
+
+      <li class="nav-item nav-category">Information</li>
+      <li class="nav-item">
+        <a href="{{ route('about') }}" class="nav-link {{ request()->routeIs('about*') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="info"></i>
+          <span class="link-title">About</span>
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a href="{{ route('contact') }}" class="nav-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="phone"></i>
+          <span class="link-title">Contact</span>
+        </a>
+      </li>
     </ul>
   </div>
 </nav>

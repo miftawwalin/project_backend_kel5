@@ -1,4 +1,4 @@
-@extends('layouts.app')
+  @extends('layouts.app')
 
 @section('title', 'Form Request Barang Warehouse Consumable')
 
