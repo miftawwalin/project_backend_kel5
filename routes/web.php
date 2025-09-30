@@ -12,6 +12,9 @@ Route::get('/', function () {
 
 // Product Resource Route
 Route::resource('products', ProductController::class);
+//importItem
+Route::resource('products', ProductController::class);
+Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
 
 // Route khusus untuk form tambah produk dari folder pages
 Route::get('/add-product', function () {

@@ -1,5 +1,4 @@
 <?php
-// database/migrations/xxxx_xx_xx_create_products_table.php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -10,11 +9,11 @@ return new class extends Migration {
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('item_code')->unique();
             $table->string('name');
-            $table->string('item_code')->unique(); 
             $table->string('category');
             $table->string('loc')->nullable();
-            $table->integer('qty');
+            $table->integer('qty')->default(0);
             $table->string('uom')->nullable();
             $table->integer('min_stock')->default(0);
             $table->timestamps();

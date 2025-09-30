@@ -10,10 +10,10 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
-    {
-        // Panggil ProductSeeder
-        $this->call([
-            ProductSeeder::class,
-        ]);
-    }
+{
+    $this->call(ProductSeeder::class);
 }
+
+
+    }
+
