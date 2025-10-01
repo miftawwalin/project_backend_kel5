@@ -2,20 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
-        'item_code',
-        'name',
-        'category',
-        'loc',
-        'qty',
-        'uom',
-        'min_stock',
+        'item_code','name','category','loc','qty','uom','min_stock'
     ];
+
+    public function requests()
+    {
+        return $this->hasMany(RequestProduct::class);
+    }
 }

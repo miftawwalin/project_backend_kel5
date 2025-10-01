@@ -2,36 +2,41 @@
 
 @section('content')
 <div class="container">
-    <h4>Daftar Request Barang</h4>
-    <a href="{{ route('requests.create') }}" class="btn btn-success mb-3">+ Buat Request</a>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
+    <h3>Daftar Request Barang</h3>
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Tanggal</th>
+                <th>User</th>
                 <th>Produk</th>
+                <th>Jumlah</th>
                 <th>Status</th>
-                <th>Jumlah Item</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
             @foreach($requests as $req)
             <tr>
-                <td>{{ $req->id }}</td>
-                <td>{{ $req->request_date }}</td>
-                <td>{{ $req->produk }}</td>
-                <td>{{ $req->status }}</td>
-                <td>{{ $req->items->count() }}</td>
+                <td>{{ $req->user->name }}</td>
+                <td>{{ $req->product->name }}</td>
+                <td>{{ $req->quantity }}</td>
+                <td>{{ ucfirst($req->status) }}</td>
+                <td>
+                    @if($req->status == 'pending')
+                        <form method="POST" action="{{ route('requests.approve',$req->id) }}" class="d-inline">
+                            @csrf
+                            <button class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                        <form method="POST" action="{{ route('requests.reject',$req->id) }}" class="d-inline">
+                            @csrf
+                            <button class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    @else
+                        {{ ucfirst($req->status) }}
+                    @endif
+                </td>
             </tr>
             @endforeach
         </tbody>
     </table>
-
-    {{ $requests->links() }}
 </div>
 @endsection

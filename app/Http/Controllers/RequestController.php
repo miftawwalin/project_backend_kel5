@@ -2,57 +2,79 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RequestProduct;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use App\Models\RequestModel;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class RequestController extends Controller
 {
+    // 📌 User lihat form request
+    public function create()
+    {
+        $products = Product::all();
+        return view('requests.create', compact('products'));
+    }
+
+    // 📌 User submit request
+    public function store(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity'   => 'required|integer|min:1',
+        ]);
+
+        RequestProduct::create([
+            'user_id'   => Auth::id(),
+            'product_id'=> $request->product_id,
+            'quantity'  => $request->quantity,
+            'status'    => 'pending'
+        ]);
+
+        return redirect()->route('requests.user')->with('success','Request berhasil diajukan');
+    }
+
+    // 📌 User lihat request miliknya
+    public function userIndex()
+    {
+        $requests = RequestProduct::where('user_id', Auth::id())->with('product')->get();
+        return view('requests.user_index', compact('requests'));
+    }
+
+    // 📌 Admin lihat semua request
     public function index()
     {
-        $requests = RequestModel::with('items')->latest()->paginate(10);
+        $requests = RequestProduct::with('user','product')->get();
         return view('requests.index', compact('requests'));
     }
 
-    public function create()
+    // 📌 Admin approve
+    public function approve($id)
     {
-        return view('requests.create');
-    }
+        $req = RequestProduct::findOrFail($id);
+        $product = $req->product;
 
-    public function store(Request $request)
-    {
-        $data = $request->validate([
-            'request_date' => 'required|date',
-            'produk' => 'nullable|string|max:255',
-            'items' => 'required|array|min:1',
-            'items.*.item_code' => 'nullable|string',
-            'items.*.item_name' => 'required|string',
-            'items.*.loc' => 'nullable|string',
-            'items.*.qty' => 'required|integer|min:1',
-            'items.*.uom' => 'nullable|string',
-            'items.*.npk_name' => 'nullable|string',
-        ]);
-
-        DB::beginTransaction();
-        try {
-            $req = RequestModel::create([
-                'request_date' => $data['request_date'],
-                'produk' => $data['produk'] ?? null,
-                'status' => 'pending',
-            ]);
-
-            $req->items()->createMany($data['items']);
-
-            DB::commit();
-            return redirect()->route('requests.index')->with('success', 'Request berhasil disimpan.');
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => $e->getMessage()]);
+        if ($product->qty < $req->quantity) {
+            return back()->withErrors('Stok tidak cukup!');
         }
-    }
-}
-$product = Product::where('item_code', $request->item_code)->first();
 
-if (!$product) {
-    return response()->json(['error' => 'Item Code not found in database!'], 404);
+        $req->status = 'approved';
+        $req->save();
+
+        // stok berkurang
+        $product->qty -= $req->quantity;
+        $product->save();
+
+        return back()->with('success','Request disetujui dan stok berkurang');
+    }
+
+    // 📌 Admin reject
+    public function reject($id)
+    {
+        $req = RequestProduct::findOrFail($id);
+        $req->status = 'rejected';
+        $req->save();
+
+        return back()->with('success','Request ditolak');
+    }
 }
