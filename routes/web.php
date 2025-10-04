@@ -48,8 +48,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/requests/{id}/approve',[RequestController::class,'approve'])->name('requests.approve');
         Route::post('/requests/{id}/reject',[RequestController::class,'reject'])->name('requests.reject');
 
-        Route::get('/admin/dashboard', function(){
-            return view('dashboard_admin');
+        Route::get('/dashboard', function () {
+            if (Auth::check()) {
+                return Auth::user()->role === 'admin'
+                    ? redirect()->route('admin.dashboard')
+                    : redirect()->route('user.dashboard');
+            }
+            return redirect()->route('login');
+        })->name('dashboard');
+
+        Route::get('/admin/dashboard', function () {
+            return view('admin.dashboard_admin'); // sesuaikan dengan file view kamu
         })->name('admin.dashboard');
     });
 

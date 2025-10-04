@@ -41,10 +41,14 @@ class Kernel extends HttpKernel
     'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
     'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-
-   
     'role' => \App\Http\Middleware\RoleMiddleware::class,
 ];
 
     
+}
+
+public function __construct(\Illuminate\Contracts\Http\Kernel $kernel = null)
+{
+    parent::__construct($kernel);
+    \Log::info('Kernel loaded from: ' . base_path());
 }

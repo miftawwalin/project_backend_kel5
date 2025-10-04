@@ -29,7 +29,7 @@
           </div>
           <div class="row g-0 p-1">
             <div class="col-3 text-center">
-              <a href="{{ route('form-request-user') }}" class="dropdown-item d-flex flex-column align-items-center justify-content-center wd-70 ht-70"><i data-feather="file-text" class="icon-lg mb-1"></i><p class="tx-12">Request</p></a>
+              <a href="{{ route('requests.create') }}" class="dropdown-item d-flex flex-column align-items-center justify-content-center wd-70 ht-70"><i data-feather="file-text" class="icon-lg mb-1"></i><p class="tx-12">Request</p></a>
             </div>
             <div class="col-3 text-center">
               <a href="{{ route('informasi-stock') }}" class="dropdown-item d-flex flex-column align-items-center justify-content-center wd-70 ht-70"><i data-feather="package" class="icon-lg mb-1"></i><p class="tx-12">Stock</p></a>
