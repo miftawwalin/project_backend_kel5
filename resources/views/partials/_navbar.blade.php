@@ -29,7 +29,7 @@
           </div>
           <div class="row g-0 p-1">
             <div class="col-3 text-center">
-              <a href="{{ route('requests.create') }}" class="dropdown-item d-flex flex-column align-items-center justify-content-center wd-70 ht-70"><i data-feather="file-text" class="icon-lg mb-1"></i><p class="tx-12">Request</p></a>
+              <a href="{{ route('form-request-user') }}" class="dropdown-item d-flex flex-column align-items-center justify-content-center wd-70 ht-70"><i data-feather="file-text" class="icon-lg mb-1"></i><p class="tx-12">Request</p></a>
             </div>
             <div class="col-3 text-center">
               <a href="{{ route('informasi-stock') }}" class="dropdown-item d-flex flex-column align-items-center justify-content-center wd-70 ht-70"><i data-feather="package" class="icon-lg mb-1"></i><p class="tx-12">Stock</p></a>
@@ -151,7 +151,7 @@
         <div class="dropdown-menu p-0" aria-labelledby="profileDropdown">
           <div class="d-flex flex-column align-items-center border-bottom px-5 py-3">
             <div class="mb-3">
-              <img class="wd-80 ht-80 rounded-circle" src="{{ asset('assets/images/faces/face1.jpg') }}" alt="">
+              <img class="wd-80 ht-80 rounded-circle" src="{{ asset('assets/images/avatar.jpg') }}" alt="">
             </div>
             <div class="text-center">
               <p class="tx-16 fw-bolder">Admin User</p>
@@ -166,11 +166,15 @@
               </a>
             </li>
             <li class="dropdown-item py-2">
-              <a href="pages/authentication/login.html" class="text-body ms-0">
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+              <button type="submit" class="btn btn-link text-body p-0 ms-0 d-flex align-items-center">
                 <i class="me-2 icon-md" data-feather="log-out"></i>
                 <span>Logout</span>
-              </a>
-            </li>
+              </button>
+            </form>
+          </li>
+
           </ul>
         </div>
       </li>

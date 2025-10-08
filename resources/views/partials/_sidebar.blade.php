@@ -44,7 +44,7 @@
       </li>
       
       <li class="nav-item">
-        <a href="{{ route('requests.create') }}" class="nav-link {{ request()->routeIs('form-request-user*') ? 'active' : '' }}">
+        <a href="{{ route('form-request-user') }}" class="nav-link {{ request()->routeIs('form-request-user*') ? 'active' : '' }}">
           <i class="link-icon" data-feather="file-text"></i>
           <span class="link-title">Request Form</span>
         </a>

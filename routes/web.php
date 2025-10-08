@@ -30,15 +30,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // ----------------- Request Barang -----------------
     Route::resource('requests', RequestController::class);
-
+    
     // 
     Route::middleware('role:user')->group(function(){
         Route::get('/requests/create',[RequestController::class,'create'])->name('requests.create');
         Route::post('/requests',[RequestController::class,'store'])->name('requests.store');
         Route::get('/requests/user',[RequestController::class,'userIndex'])->name('requests.user');
 
-        Route::get('/user/dashboard', function(){
-            return view('dashboard_user');
+        Route::get('/user/dashboard', function () {
+            return view('user.dashboard');
         })->name('user.dashboard');
     });
 
@@ -55,7 +55,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
                     : redirect()->route('user.dashboard');
             }
             return redirect()->route('login');
-        })->name('dashboard');
+        })->name('dashboard');  
 
         Route::get('/admin/dashboard', function () {
             return view('admin.dashboard_admin'); // sesuaikan dengan file view kamu
@@ -76,6 +76,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // ----------------- About -----------------
     Route::get('/about', fn()=>view('pages.about'))->name('about');
+
+    Route::get('/form-request-user', fn()=>view('pages.form-request-user'))->name('form-request-user');
+
 
     // ----------------- Contact -----------------
     Route::get('/contact', fn()=>view('pages.contact'))->name('contact');
