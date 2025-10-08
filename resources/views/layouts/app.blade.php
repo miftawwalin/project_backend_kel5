@@ -93,5 +93,9 @@
 	<script src="{{ asset('assets/js/settings-test.js') }}"></script>
 	<!-- End Settings Test -->
 
+	<!-- Sidebar Fix -->
+	<script src="{{ asset('assets/js/sidebar-fix.js') }}"></script>
+	<!-- End Sidebar Fix -->
+
 </body>
 </html>

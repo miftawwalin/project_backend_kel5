@@ -14,6 +14,38 @@
     
     console.log('Settings sidebar toggler found:', $('.settings-sidebar-toggler').length);
     
+    // Function to update sidebar logo based on theme
+    function updateSidebarLogo(sidebarTheme) {
+      var $logo = $('#sidebar-logo');
+      if ($logo.length) {
+        // Get the base URL from the current logo src to maintain Laravel's asset() helper path
+        var currentSrc = $logo.attr('src');
+        var basePath = currentSrc.substring(0, currentSrc.lastIndexOf('/') + 1);
+        
+        var logoPath = sidebarTheme === 'sidebar-dark' 
+          ? basePath + 'logowhite.png'
+          : basePath + 'logo.png';
+        
+        // Create a new image to test if the logo exists before changing
+        var testImg = new Image();
+        testImg.onload = function() {
+          $logo.attr('src', logoPath);
+          console.log('Logo successfully updated to:', logoPath);
+        };
+        testImg.onerror = function() {
+          console.error('Failed to load logo:', logoPath);
+          // Fallback to original logo if white logo fails to load
+          if (sidebarTheme === 'sidebar-dark') {
+            $logo.attr('src', basePath + 'logo.png');
+            console.log('Fallback: Using regular logo for dark theme');
+          }
+        };
+        testImg.src = logoPath;
+      } else {
+        console.error('Logo element with id "sidebar-logo" not found');
+      }
+    }
+    
     // Get current theme from localStorage or default to light
     var currentTheme = localStorage.getItem('theme') || 'light';
     var currentSidebarTheme = localStorage.getItem('sidebarTheme') || 'sidebar-light';
@@ -27,11 +59,34 @@
     updateThemeUI(currentTheme);
     updateSidebarThemeUI(currentSidebarTheme);
     
+    // Ensure logo is updated on page load
+    updateSidebarLogo(currentSidebarTheme);
+    
     // Add test functions to window for debugging
     window.testSidebarTheme = function(theme) {
       console.log('Testing sidebar theme:', theme);
       applySidebarTheme(theme);
       updateSidebarThemeUI(theme);
+    };
+    
+    // Debug function to test logo switching
+    window.testLogoSwitch = function() {
+      console.log('Testing logo switch...');
+      var $logo = $('#sidebar-logo');
+      if ($logo.length) {
+        console.log('Current logo src:', $logo.attr('src'));
+        console.log('Current body classes:', document.body.className);
+        
+        // Test dark logo
+        updateSidebarLogo('sidebar-dark');
+        
+        // Test light logo after 2 seconds
+        setTimeout(function() {
+          updateSidebarLogo('sidebar-light');
+        }, 2000);
+      } else {
+        console.error('Logo element not found!');
+      }
     };
     
     window.getCurrentThemes = function() {
@@ -152,6 +207,9 @@
       
       // Add new sidebar theme class
       $body.addClass(sidebarTheme);
+      
+      // Update sidebar logo based on theme
+      updateSidebarLogo(sidebarTheme);
       
       console.log('Body classes after applying sidebar theme:', $body[0].className);
       
