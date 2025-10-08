@@ -2,7 +2,7 @@
 <nav class="sidebar">
   <div class="sidebar-header">
     <a href="{{ route('dashboard') }}" class="sidebar-brand">
-    <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" style="width: 165px; height: 100%; object-fit: contain; border-radius: 5px; margin-right: 8px;">
+    <img id="sidebar-logo" src="{{ asset('assets/images/logo.png') }}" alt="Logo" style="width: 165px; height: 100%; object-fit: contain; border-radius: 5px; margin-right: 8px;">
     </a>
     <div class="sidebar-toggler not-active">
       <span></span>
