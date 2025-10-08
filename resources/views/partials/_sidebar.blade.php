@@ -70,35 +70,10 @@
               <a href="{{ route('inventory-dashboard') }}" class="nav-link {{ request()->routeIs('inventory-dashboard*') ? 'active' : '' }}">Inventory Dashboard</a>
             </li>
             <li class="nav-item">
-              <a href="{{ route('inventory-items') }}" class="nav-link {{ request()->routeIs('inventory-items*') ? 'active' : '' }}">Master Items</a>
-            </li>
-            <li class="nav-item">
               <a href="{{ route('inventory-movements') }}" class="nav-link {{ request()->routeIs('inventory-movements*') ? 'active' : '' }}">Stock Movements</a>
             </li>
             <li class="nav-item">
               <a href="{{ route('inventory-reports') }}" class="nav-link {{ request()->routeIs('inventory-reports*') ? 'active' : '' }}">Inventory Reports</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      
-      <li class="nav-item nav-category">Reports</li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#reports" role="button" aria-expanded="false" aria-controls="reports">
-          <i class="link-icon" data-feather="pie-chart"></i>
-          <span class="link-title">Analytics</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="reports">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="#" class="nav-link">Sales Report</a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">Stock Report</a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">User Activity</a>
             </li>
           </ul>
         </div>
