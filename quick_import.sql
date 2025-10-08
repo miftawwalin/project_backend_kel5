@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `items` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `item_code` (`item_code`)
+  UNIQUE KEY `item_code` (`item_code`)  
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- 2. Tabel Users (Data Pegawai)
