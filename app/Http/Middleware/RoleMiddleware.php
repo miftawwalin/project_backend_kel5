@@ -9,9 +9,19 @@ class RoleMiddleware
 {
     public function handle($request, Closure $next, ...$roles)
     {
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
+
         $user = Auth::user();
 
-        if (!$user || !in_array($user->role, $roles)) {
+        // ✅ Admin bisa akses SEMUA halaman
+        if ($user->role === 'admin') {
+            return $next($request);
+        }
+
+        // ✅ Jika user biasa, pastikan hanya akses role yg diizinkan
+        if (!in_array($user->role, $roles)) {
             abort(403, 'Unauthorized');
         }
 

@@ -3,9 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\RequestController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductRequestController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,51 +22,55 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| Product Management (Admin)
+| ADMIN ROUTES
 |--------------------------------------------------------------------------
 */
-
 Route::middleware(['auth', 'role:admin'])->group(function () {
+
+    // Dashboard
+    Route::get('/admin/dashboard', fn() => view('admin.dashboard_admin'))->name('admin.dashboard');
+
+    // CRUD Product
     Route::resource('products', ProductController::class);
     Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
     Route::get('/add-product', fn() => view('pages.add-product'))->name('add-product');
-});
 
-/*
-|--------------------------------------------------------------------------
-| Request Barang (User & Admin)
-|--------------------------------------------------------------------------
-*/
-
-// === USER ===
-Route::middleware(['auth', 'role:user'])->group(function () {
-    // form request barang
-    Route::get('/requests/create', [ProductRequestController::class, 'create'])->name('requests.create');
-    Route::post('/requests', [ProductRequestController::class, 'store'])->name('requests.store');
-
-    // daftar request milik user
-    Route::get('/requests/user', [ProductRequestController::class, 'userIndex'])->name('requests.user');
-
-    // dashboard user
-    Route::get('/user/dashboard', fn() => view('user.dashboard'))->name('user.dashboard');
-});
-
-// === ADMIN ===
-Route::middleware(['auth', 'role:admin'])->group(function () {
-    // halaman admin melihat semua request
+    // Manage Requests (lihat semua request)
     Route::get('/requests/admin', [ProductRequestController::class, 'index'])->name('requests.index');
-
-    // approve / reject request
     Route::post('/requests/{id}/approve', [ProductRequestController::class, 'approve'])->name('requests.approve');
     Route::post('/requests/{id}/reject', [ProductRequestController::class, 'reject'])->name('requests.reject');
 
-    // dashboard admin
-    Route::get('/admin/dashboard', fn() => view('admin.dashboard_admin'))->name('admin.dashboard');
+    // 🔹 Izinkan admin juga akses form request user
+    Route::get('/form-request-user', [ProductRequestController::class, 'create'])
+    ->middleware(['auth', 'role:admin,user'])
+    ->name('form-request-user');
+
 });
 
 /*
 |--------------------------------------------------------------------------
-| General Pages
+| USER ROUTES
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:user'])->group(function () {
+
+    // Dashboard User
+    Route::get('/user/dashboard', [ProductRequestController::class, 'userDashboard'])->name('user.dashboard');
+
+    // Request Barang
+    Route::get('/requests/create', [ProductRequestController::class, 'create'])->name('requests.create');
+    Route::post('/requests', [ProductRequestController::class, 'store'])->name('requests.store');
+    Route::get('/requests/user', [ProductRequestController::class, 'userIndex'])->name('requests.user');
+
+    // Form Request
+    Route::get('/form-request-user', [ProductRequestController::class, 'create'])->name('form-request-user');
+    Route::post('/requests', [ProductRequestController::class, 'store'])->name('requests.store');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| GENERAL PAGES
 |--------------------------------------------------------------------------
 */
 
@@ -79,3 +82,18 @@ Route::get('/inventory-movements', fn() => view('pages.inventory-movements'))->n
 Route::get('/inventory-reports', fn() => view('pages.inventory-reports'))->name('inventory-reports');
 Route::get('/about', fn() => view('pages.about'))->name('about');
 Route::get('/contact', fn() => view('pages.contact'))->name('contact');
+
+/*
+|--------------------------------------------------------------------------
+| UNIVERSAL DASHBOARD REDIRECT
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/dashboard', function () {
+    if (Auth::check()) {
+        return Auth::user()->role === 'admin'
+            ? redirect()->route('admin.dashboard')
+            : redirect()->route('user.dashboard');
+    }
+    return redirect()->route('login');
+})->name('dashboard');

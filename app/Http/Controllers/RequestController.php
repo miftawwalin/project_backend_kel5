@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 class RequestController extends Controller
 {
-    // 📌 User lihat form request
+    // 📌 User liht form request
     public function create()
     {
         $products = Product::all();
