@@ -12,6 +12,6 @@ class Product extends Model
 
     public function requests()
     {
-        return $this->hasMany(RequestProduct::class);
+        return $this->hasMany(ProductRequest::class);
     }
 }

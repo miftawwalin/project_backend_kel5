@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('item_code', 100)->unique();
             $table->string('name', 255);
             $table->string('category', 100);
+            $table->integer('stock')->default(0);
             $table->integer('qty')->default(0);
             $table->string('loc', 100)->nullable();
             $table->string('uom', 10)->nullable();

@@ -8,6 +8,7 @@
 
     class ProductController extends Controller
     {
+        
         public function index(Request $request)
         {
             $query = Product::query();
@@ -52,25 +53,29 @@
         }
 
         public function store(Request $request)
-        {
-            $validated = $request->validate([
-                'item_code' => 'required|string|max:100|unique:products,item_code',
-                'name' => 'required|string|max:255',
-                'category' => 'required|string|max:100',
-                'qty' => 'required|integer|min:0',
-                'loc' => 'nullable|string|max:100',
-                'uom' => 'nullable|string|max:10',
-                'min_stock' => 'nullable|integer|min:0',
-            ], [
-                'item_code.unique' => '⚠️ Kode item sudah dipakai, silakan gunakan kode lain.',
-                'item_code.required' => '⚠️ Kode item wajib diisi.',
-                'name.required' => '⚠️ Nama produk wajib diisi.',
-                'qty.integer' => '⚠️ Qty harus berupa angka.',
-            ]);
+{
+    $validated = $request->validate([
+        'item_code' => 'required|string|max:100|unique:products,item_code',
+        'name' => 'required|string|max:255',
+        'category' => 'required|string|max:100',
+        'qty' => 'required|integer|min:0',
+        'loc' => 'nullable|string|max:100',
+        'uom' => 'nullable|string|max:10',
+        'min_stock' => 'nullable|integer|min:0',
+    ], [
+        'item_code.unique' => '⚠️ Kode item sudah dipakai, silakan gunakan kode lain.',
+        'item_code.required' => '⚠️ Kode item wajib diisi.',
+        'name.required' => '⚠️ Nama produk wajib diisi.',
+        'qty.integer' => '⚠️ Qty harus berupa angka.',
+    ]);
 
-            Product::create($validated);
-            return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
-        }
+    // Tambahkan stok awal = qty
+    $validated['stock'] = $validated['qty'];
+
+    Product::create($validated);
+
+    return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
+}
 
         public function edit(Product $product)
         {
@@ -141,4 +146,25 @@
 
             return redirect()->route('products.index')->with('success', 'Data produk berhasil diimport.');
         }
+        
+        public function stockInfo()
+{
+    // Ambil semua produk
+    $products = Product::orderBy('category')->get();
+
+    // Hitung total produk
+    $totalProducts = $products->count();
+
+    // Pastikan nilai qty dan min_stock dipaksa jadi integer
+    $lowStock = $products->filter(function ($product) {
+        $qty = (int) $product->qty;
+        $minStock = (int) ($product->min_stock ?? 0);
+        return $qty <= $minStock;
+    })->count();
+
+    $inStock = $totalProducts - $lowStock;
+
+    return view('pages.informasi-stock', compact('products', 'totalProducts', 'lowStock', 'inStock'));
+}
+
     }

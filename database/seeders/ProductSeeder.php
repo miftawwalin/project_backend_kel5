@@ -3,42 +3,43 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use App\Models\Product;
 
 class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        Product::truncate(); // biar tidak duplikat saat seed ulang
+        // 🚫 Matikan foreign key check sementara
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        Product::create([
-            'item_code' => 'BRG001',
-            'name' => 'Baut Baja M10',
-            'category' => 'Sparepart',
-            'loc' => 'Rak A1',
-            'qty' => 100,
-            'uom' => 'pcs',
-            'min_stock' => 20,
-        ]);
+        // Gunakan delete() bukan truncate()
+        Product::query()->delete();
 
+        // ✅ Masukkan contoh data produk
         Product::create([
-            'item_code' => 'BRG002',
-            'name' => 'Kabel NYA 2.5mm',
+            'item_code' => 'P001',
+            'name' => 'Kabel Listrik',
             'category' => 'Elektrikal',
-            'loc' => 'Rak B2',
-            'qty' => 50,
-            'uom' => 'meter',
-            'min_stock' => 10,
+            'stock' => 10,
+            'qty' => 10,
+            'loc' => 'Rak A1',
+            'uom' => 'pcs',
+            'min_stock' => 2,
         ]);
 
         Product::create([
-            'item_code' => 'BRG003',
-            'name' => 'Plat Besi 3mm',
+            'item_code' => 'P002',
+            'name' => 'Baut Besi',
             'category' => 'Material',
-            'loc' => 'Rak C1',
-            'qty' => 200,
-            'uom' => 'lembar',
-            'min_stock' => 30,
+            'stock' => 25,
+            'qty' => 25,
+            'loc' => 'Rak B2',
+            'uom' => 'pcs',
+            'min_stock' => 5,
         ]);
+
+        // ✅ Aktifkan kembali foreign key
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

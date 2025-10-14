@@ -12,7 +12,8 @@
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <form action="{{ route('product-request.store') }}" method="POST" class="card p-4 mb-4 shadow-sm">
+    <form action="{{ route('requests.store') }}" method="POST">
+
         @csrf
         <div class="row g-3">
             <div class="col-md-6">

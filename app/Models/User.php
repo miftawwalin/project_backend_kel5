@@ -25,13 +25,34 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // relasi ke department
+    /**
+     * Relasi ke model Karyawan
+     * 1 user hanya punya 1 data karyawan
+     */
+    public function karyawan()
+    {
+        return $this->hasOne(Karyawan::class);
+    }
+
+    /**
+     * Relasi ke model Department (jika langsung ada department_id di tabel users)
+     */
     public function department()
     {
         return $this->belongsTo(Department::class);
     }
 
-    // cek role langsung
+    /**
+     * Relasi ke permintaan barang
+     */
+    public function requests()
+    {
+        return $this->hasMany(ProductRequest::class);
+    }
+
+    /**
+     * Cek role user
+     */
     public function isAdmin()
     {
         return $this->role === 'admin';
@@ -41,9 +62,4 @@ class User extends Authenticatable
     {
         return $this->role === 'user';
     }
-
-    public function requests()
-{
-    return $this->hasMany(RequestProduct::class);
-}
 }
