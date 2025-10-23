@@ -81,6 +81,7 @@ Route::get('/inventory-movements', fn() => view('pages.inventory-movements'))->n
 Route::get('/inventory-reports', fn() => view('pages.inventory-reports'))->name('inventory-reports');
 Route::get('/about', fn() => view('pages.about'))->name('about');
 Route::get('/contact', fn() => view('pages.contact'))->name('contact');
+Route::get('/form-request-admin', fn() => view('pages.form-request-admin'))->name('form-request-admin');
 
 /*
 |--------------------------------------------------------------------------

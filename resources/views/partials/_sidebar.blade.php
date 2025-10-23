@@ -19,95 +19,57 @@
       <li class="nav-item nav-category">Main</li>
       <li class="nav-item">
         <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard*') ? 'active' : '' }}">
-          <i class="link-icon" data-feather="box"></i>
+          <i class="link-icon" data-feather="home"></i>
           <span class="link-title">Dashboard</span>
         </a>
       </li>
 
-      {{-- HANYA ADMIN YANG MELIHAT DATA MANAGEMENT --}}
-      @if(auth()->user()->role === 'admin')
+      {{-- HANYA ADMIN YANG MELIHAT DATA MANAGEMENT --}}  
       <li class="nav-item nav-category">Data Management</li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#products" role="button"
-           aria-expanded="false" aria-controls="products">
-          <i class="link-icon" data-feather="package"></i>
-          <span class="link-title">Products</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="products">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{ route('informasi-stock') }}"
-                 class="nav-link {{ request()->routeIs('informasi-stock*') ? 'active' : '' }}">
-                 Stock Information
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{{ route('add-product') }}" class="nav-link">Add Product</a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">Categories</a>
-            </li>
-          </ul>
-        </div>
-      </li>
-      @endif
+      {{-- REQUEST FORM UNTUK SEMUA ROLE --}}
 
-      {{-- USER BISA MELIHAT STOCK INFO TANPA ADD PRODUCT --}}
-      @if(auth()->user()->role === 'user')
-      <li class="nav-item nav-category">Stock</li>
+      <li class="nav-item">
+        <a href="{{ route('form-request-admin') }}" class="nav-link {{ request()->routeIs('form-request-admin*') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="clipboard"></i>
+          <span class="link-title">Request Form By Admin</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a href="{{ route('form-request-user') }}" class="nav-link {{ request()->routeIs('form-request-user*') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="edit-3"></i>
+          <span class="link-title">Request Form By User</span>
+        </a>
+      </li>
+
       <li class="nav-item">
         <a href="{{ route('informasi-stock') }}" class="nav-link {{ request()->routeIs('informasi-stock*') ? 'active' : '' }}">
-          <i class="link-icon" data-feather="archive"></i>
+          <i class="link-icon" data-feather="package"></i>
           <span class="link-title">Stock Information</span>
         </a>
       </li>
-      @endif
-
-      {{-- REQUEST FORM UNTUK SEMUA ROLE --}}
-      <li class="nav-item">
-        <a href="{{ route('form-request-user') }}" class="nav-link {{ request()->routeIs('form-request-user*') ? 'active' : '' }}">
-          <i class="link-icon" data-feather="file-text"></i>
-          <span class="link-title">Request Form</span>
-        </a>
-      </li>
-
-      {{-- USER MANAGEMENT HANYA ADMIN --}}
-      @if(auth()->user()->role === 'admin')
-      <li class="nav-item">
-        <a href="{{ route('user-informasi') }}" class="nav-link {{ request()->routeIs('user-informasi*') ? 'active' : '' }}">
-          <i class="link-icon" data-feather="users"></i>
-          <span class="link-title">User Management</span>
-        </a>
-      </li>
-      @endif
 
       {{-- DATA MASTER (ADMIN ONLY) --}}
       @if(auth()->user()->role === 'admin')
       <li class="nav-item nav-category">Data Master</li>
+      {{-- ubahan ryan *u admin --}}
       <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#dataMaster" role="button"
-           aria-expanded="false" aria-controls="dataMaster">
-          <i class="link-icon" data-feather="database"></i>
-          <span class="link-title">Inventory Management</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
+        <a href="{{ route('inventory-dashboard') }}" class="nav-link {{ request()->routeIs('inventory-dashboard*') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="trending-up"></i>
+          <span class="link-title">Inventory Dashboard</span>
         </a>
-        <div class="collapse" id="dataMaster">
-          <ul class="nav sub-menu">
-            <li class="nav-item">
-              <a href="{{ route('inventory-dashboard') }}"
-                 class="nav-link {{ request()->routeIs('inventory-dashboard*') ? 'active' : '' }}">Inventory Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a href="{{ route('inventory-movements') }}"
-                 class="nav-link {{ request()->routeIs('inventory-movements*') ? 'active' : '' }}">Stock Movements</a>
-            </li>
-            <li class="nav-item">
-              <a href="{{ route('inventory-reports') }}"
-                 class="nav-link {{ request()->routeIs('inventory-reports*') ? 'active' : '' }}">Inventory Reports</a>
-            </li>
-          </ul>
-        </div>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('add-product') }}" class="nav-link {{ request()->routeIs('add-product*') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="plus-circle"></i>
+          <span class="link-title">Add Product</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{{ route('inventory-movements') }}" class="nav-link {{ request()->routeIs('inventory-movements*') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="refresh-cw"></i>
+          <span class="link-title">Stock Movements</span>
+        </a>
       </li>
       @endif
 
@@ -115,9 +77,15 @@
       @if(auth()->user()->role === 'admin')
       <li class="nav-item nav-category">Settings</li>
       <li class="nav-item">
+        <a href="{{ route('user-informasi') }}" class="nav-link {{ request()->routeIs('user-informasi*') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="users"></i>
+          <span class="link-title">User Management</span>
+        </a>
+      </li>
+      <li class="nav-item">
         <a class="nav-link" data-bs-toggle="collapse" href="#settings" role="button"
            aria-expanded="false" aria-controls="settings">
-          <i class="link-icon" data-feather="settings"></i>
+          <i class="link-icon" data-feather="sliders"></i>
           <span class="link-title">Configuration</span>
           <i class="link-arrow" data-feather="chevron-down"></i>
         </a>
