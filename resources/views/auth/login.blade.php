@@ -108,7 +108,7 @@
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
 
-        <p class="mt-4 text-light small">© {{ date('Y') }} PT Metal Art Toyota Astra Indonesia</p>
+        <p class="mt-4 text-light small">© {{ date('Y') }} PT MetalArt Astra Indonesia</p>
     </div>
 </body>
 </html>
