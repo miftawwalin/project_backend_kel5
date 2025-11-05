@@ -88,8 +88,8 @@
         <!-- Logo perusahaan -->
         <img src="{{ asset('assets/images/logo2.jpeg') }}" alt="Logo Metal Art" class="company-logo">
 
-
-        <h3>PT Metal Art Toyota</h3>
+ 
+        <h3>PT Metal Art Astra</h3>
         <h5>Inventory Consumable System</h5>
 
         <form method="POST" action="{{ route('login') }}">
