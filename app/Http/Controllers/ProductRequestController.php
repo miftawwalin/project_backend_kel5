@@ -2,90 +2,93 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\ProductRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductRequestController extends Controller
 {
     /**
-     * Halaman daftar request untuk user
+     * 🔹 Form Request Barang (User & Admin)
      */
-    public function userIndex()
+    public function create()
     {
-        $user = auth()->user();
-        $karyawan = $user->karyawan;
-
         $products = Product::all();
-        $requests = ProductRequest::with('product')
-            ->when($karyawan, function ($query) use ($karyawan) {
-                $query->where('karyawan_id', $karyawan->id);
-            })
-            ->orderBy('created_at', 'desc')
+        $requests = ProductRequest::with(['product'])
+            ->where('user_id', Auth::id())
+            ->latest()
             ->get();
 
         return view('pages.form-request-user', compact('products', 'requests'));
     }
 
     /**
-     * Simpan permintaan barang dari user/admin
+     * 🔹 Simpan Permintaan Barang
      */
     public function store(Request $request)
     {
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'qty' => 'required|integer|min:1',
-            'note' => 'nullable|string|max:255',
+            'quantity' => 'required|integer|min:1',
+            'note' => 'nullable|string|max:255'
         ]);
 
-        $user = auth()->user();
-        $karyawan = $user->karyawan;
+        $product = Product::findOrFail($request->product_id);
+
+        if ($request->quantity > $product->qty) {
+            return back()->with('error', 'Jumlah permintaan melebihi stok tersedia!');
+        }
 
         ProductRequest::create([
-            'product_id'    => $request->product_id,
-            'karyawan_id'   => $karyawan?->id,
-            'department_id' => $karyawan?->department_id,
-            'qty'           => $request->qty,
-            'note'          => $request->note,
-            'status'        => 'Pending',
+            'user_id' => Auth::id(),
+            'department_id' => Auth::user()->department_id ?? null,
+            'product_id' => $request->product_id,
+            'quantity' => $request->quantity,
+            'note' => $request->note,
+            'status' => 'Pending',
         ]);
 
-        return redirect()->back()->with('success', 'Permintaan barang berhasil dikirim.');
+        return back()->with('success', 'Permintaan barang berhasil dikirim!');
     }
 
     /**
-     * Daftar semua request (khusus admin)
+     * 🔹 Halaman Admin – Daftar Semua Request
      */
     public function index()
-    {
-        $requests = ProductRequest::with(['product', 'karyawan.department'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+{
+    $requests = ProductRequest::with(['user', 'product'])
+        ->latest()
+        ->get();
 
-        return view('admin.requests.index', compact('requests'));
-    }
+    return view('admin.admin-requests', compact('requests'));
+}
 
     /**
-     * Setujui permintaan barang
+     * 🔹 Approve Request
      */
     public function approve($id)
     {
         $req = ProductRequest::findOrFail($id);
         $product = $req->product;
 
-        if ($product->qty >= $req->qty) {
-            $product->qty -= $req->qty;
-            $product->save();
-
-            $req->update(['status' => 'Approved']);
-            return back()->with('success', 'Permintaan disetujui dan stok diperbarui.');
+        if ($product->qty < $req->quantity) {
+            return back()->with('error', 'Stok tidak mencukupi!');
         }
 
-        return back()->with('error', 'Stok tidak mencukupi!');
+        $product->qty -= $req->quantity;
+        $product->save();
+
+        $req->update([
+            'status' => 'Approved',
+            'approved_at' => now(),
+        ]);
+
+        return back()->with('success', 'Permintaan disetujui dan stok diperbarui.');
     }
 
     /**
-     * Tolak permintaan barang
+     * 🔹 Reject Request
      */
     public function reject($id)
     {
@@ -94,44 +97,55 @@ class ProductRequestController extends Controller
     }
 
     /**
-     * Dashboard user (perbaikan utama)
+     * 🔹 Dashboard User
      */
     public function userDashboard()
     {
-        $user = auth()->user();
-        $karyawan = $user->karyawan;
+        $user = Auth::user();
 
-        $requests = ProductRequest::with('product')
-            ->when($karyawan, function ($query) use ($karyawan) {
-                $query->where('karyawan_id', $karyawan->id);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $requests = ProductRequest::where('user_id', $user->id)->get();
 
-        $total = $requests->count();
-        $approved = $requests->where('status', 'Approved')->count();
-        $pending = $requests->where('status', 'Pending')->count();
-        $rejected = $requests->where('status', 'Rejected')->count();
+        $totalRequests = $requests->count();
+        $approvedRequests = $requests->where('status', 'Approved')->count();
+        $pendingRequests = $requests->where('status', 'Pending')->count();
+        $rejectedRequests = $requests->where('status', 'Rejected')->count();
 
-        return view('pages.dashboard', compact('requests', 'total', 'approved', 'pending', 'rejected'));
+        $totalProducts = Product::count();
+        $lowStock = Product::whereColumn('qty', '<=', 'min_stock')->count();
+
+        return view('user.dashboard', compact(
+            'requests',
+            'totalRequests',
+            'approvedRequests',
+            'pendingRequests',
+            'rejectedRequests',
+            'totalProducts',
+            'lowStock'
+        ));
     }
 
     /**
-     * Form request user (agar admin juga bisa akses form yang sama)
+     * 🔹 Dashboard Admin
      */
-    public function create()
+    public function adminDashboard()
     {
-        $products = Product::all();
-        $user = auth()->user();
-        $karyawan = $user->karyawan;
+        $requests = ProductRequest::with(['user', 'product', 'department'])->latest()->get();
 
-        $requests = ProductRequest::with('product')
-            ->when($karyawan, function ($query) use ($karyawan) {
-                $query->where('karyawan_id', $karyawan->id);
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $totalRequests = $requests->count();
+        $approvedRequests = $requests->where('status', 'Approved')->count();
+        $pendingRequests = $requests->where('status', 'Pending')->count();
+        $rejectedRequests = $requests->where('status', 'Rejected')->count();
 
-        return view('pages.form-request-user', compact('products', 'requests'));
+        $totalProducts = Product::count();
+        $lowStock = Product::whereColumn('qty', '<=', 'min_stock')->count();
+
+        return view('admin.dashboard', compact(
+            'totalRequests',
+            'approvedRequests',
+            'pendingRequests',
+            'rejectedRequests',
+            'totalProducts',
+            'lowStock'
+        ));
     }
 }

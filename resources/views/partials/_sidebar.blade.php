@@ -66,11 +66,22 @@
 
       {{-- REQUEST FORM UNTUK SEMUA ROLE --}}
       <li class="nav-item">
-        <a href="{{ route('form-request-user') }}" class="nav-link {{ request()->routeIs('form-request-user*') ? 'active' : '' }}">
-          <i class="link-icon" data-feather="file-text"></i>
-          <span class="link-title">Request Form</span>
+    @if(auth()->check() && auth()->user()->role === 'admin')
+        {{-- Jika admin, arahkan ke halaman admin --}}
+        <a href="{{ route('requests.index') }}" 
+           class="nav-link {{ request()->routeIs('requests.index') ? 'active' : '' }}">
+            <i class="link-icon" data-feather="file-text"></i>
+            <span class="link-title">Request Form</span>
         </a>
-      </li>
+    @else
+        {{-- Jika user biasa, arahkan ke halaman form request user --}}
+        <a href="{{ route('form-request-user') }}" 
+           class="nav-link {{ request()->routeIs('requests.form') ? 'active' : '' }}">
+            <i class="link-icon" data-feather="file-text"></i>
+            <span class="link-title">Request Form</span>
+        </a>
+    @endif
+</li>
 
       {{-- USER MANAGEMENT HANYA ADMIN --}}
       @if(auth()->user()->role === 'admin')
