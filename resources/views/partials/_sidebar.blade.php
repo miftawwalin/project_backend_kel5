@@ -49,6 +49,13 @@
         </a>
       </li>
 
+      <li class="nav-item">
+        <a href="{{ route('requests.index') }}" class="nav-link {{ request()->routeIs('requests.index*') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="check-circle"></i>
+          <span class="link-title">Approve Request</span>
+        </a>
+      </li>
+
       {{-- DATA MASTER (ADMIN ONLY) --}}
       @if(auth()->user()->role === 'admin')
       <li class="nav-item nav-category">Data Master</li>

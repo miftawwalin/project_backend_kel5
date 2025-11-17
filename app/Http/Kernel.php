@@ -54,6 +54,7 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\RoleMiddleware::class,
         'prevent-back-history' => \App\Http\Middleware\PreventBackHistory::class,
         'no-cache' => \App\Http\Middleware\NoCacheMiddleware::class,
+        'is_admin' => \App\Http\Middleware\IsAdmin::class,
 
 
     ];

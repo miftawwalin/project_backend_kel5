@@ -2,20 +2,25 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ProductRequest extends Model
 {
     use HasFactory;
 
+    protected $table = 'product_requests'; // contoh: 'request_barangs'
+
     protected $fillable = [
-        'product_id', 'karyawan_id', 'department_id',
-        'qty', 'note', 'status'
+        'user_id', 'department_id', 'product_id',
+        'quantity', 'note', 'status', 'approved_at'
     ];
 
-    public function product() { return $this->belongsTo(Product::class); }
-    public function karyawan() { return $this->belongsTo(Karyawan::class); }
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id');
+    }
     public function department() { return $this->belongsTo(Department::class); }
+    public function product() {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }
-

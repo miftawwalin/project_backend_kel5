@@ -1,76 +1,151 @@
 @extends('layouts.app')
 
+@section('title', 'Tambah Produk Baru')
+
 @section('content')
-<h2>Tambah Produk</h2>
+<div class="container-fluid py-4">
 
-@if($errors->any())
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach($errors->all() as $err)
-                <li>{{ $err }}</li>
-            @endforeach
-        </ul>
+  {{-- Judul Halaman --}}
+  <div class="mb-4 border-bottom pb-2 d-flex justify-content-between align-items-center">
+      <h3 class="fw-bold text-primary mb-0">Tambah Produk Baru</h3>
+      <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
+          <i class="bi bi-arrow-left"></i> Kembali
+      </a>
+  </div>
+
+  {{-- ✅ Alert sukses --}}
+  @if(session('success'))
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+          {{ session('success') }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+  @endif
+
+  {{-- ❌ Alert error --}}
+  @if($errors->any())
+      <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Terjadi kesalahan:</strong>
+          <ul class="mb-0 mt-2">
+              @foreach($errors->all() as $error)
+                  <li>{{ $error }}</li>
+              @endforeach
+          </ul>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+  @endif
+
+  {{-- 🧾 FORM FULL WIDTH --}}
+  <div class="card border-0 shadow-sm">
+    <div class="card-body px-4 py-4">
+
+      <form action="{{ route('products.store') }}" method="POST">
+        @csrf
+
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Kode Item</label>
+            <input type="text" name="item_code" class="form-control" value="{{ old('item_code') }}" required>
+          </div>
+          
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">Nama Produk</label>
+            <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
+          </div>
+          
+           <div class="mb-3">
+          <label class="form-label fw-semibold">Kategori</label>
+          <select name="category" class="form-select">
+              <option value="">-- Pilih Kategori --</option>
+              @foreach ($categories as $cat)
+                  <option value="{{ $cat }}" {{ old('category') == $cat ? 'selected' : '' }}>
+                      {{ $cat }}
+                  </option>
+              @endforeach
+          </select>
+      </div>
+
+      <div class="mb-3">
+          <label class="form-label fw-semibold">Departemen</label>
+          <select name="department_id" class="form-select">
+              <option value="">-- Pilih Departemen --</option>
+              @foreach ($departments as $dept)
+                  <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>
+                      {{ $dept->name }}
+                  </option>
+              @endforeach
+          </select>
+      </div>
+
+      <div class="mb-3">
+          <label class="form-label fw-semibold">Lokasi / Rak</label>
+          <select name="loc" class="form-select">
+              <option value="">-- Pilih Lokasi --</option>
+              @foreach ($locs as $loc)
+                  <option value="{{ $loc }}" {{ old('loc') == $loc ? 'selected' : '' }}>{{ $loc }}</option>
+              @endforeach
+          </select>
+      </div>
+
+      <div class="mb-3">
+          <label class="form-label fw-semibold">Qty</label>
+          <input type="number" name="qty" class="form-control" value="{{ old('qty') }}" min="0" required>
+      </div>
+
+      <div class="mb-3">
+          <label class="form-label fw-semibold">UOM</label>
+          <select name="uom" class="form-select">
+              <option value="">-- Pilih UOM --</option>
+              @foreach ($uoms as $u)
+                  <option value="{{ $u }}" {{ old('uom') == $u ? 'selected' : '' }}>{{ $u }}</option>
+              @endforeach
+          </select>
+      </div>
+
+      <div class="mb-3">
+          <label class="form-label fw-semibold">Min Stock</label>
+          <input type="number" name="min_stock" class="form-control" value="{{ old('min_stock') }}" min="0">
+      </div>
+
+      <div class="d-flex justify-content-end gap-2">
+          <a href="{{ route('products.index') }}" class="btn btn-secondary">Kembali</a>
+          <button type="submit" class="btn btn-primary">Simpan Produk</button>
+      </div>
+  </form>
+</div>
+
+        <div class="mt-4 d-flex justify-content-start gap-2">
+          <button type="submit" class="btn btn-primary px-4">
+              <i class="bi bi-save"></i> Simpan Produk
+          </button>
+          <a href="{{ route('products.index') }}" class="btn btn-outline-secondary px-4">
+              <i class="bi bi-x-circle"></i> Batal
+          </a>
+        </div>
+
+      </form>
     </div>
-@endif
+  </div>
+</div>
 
-<form action="{{ route('products.store') }}" method="POST">
-    @csrf
-
-    <div class="mb-3">
-        <label>Kode Item</label>
-        <input type="text" name="item_code" class="form-control" value="{{ old('item_code') }}" required>
-    </div>
-
-    <div class="mb-3">
-        <label>Nama Produk</label>
-        <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
-    </div>
-
-    <div class="mb-3">
-        <label>Kategori</label>
-        <select name="category" class="form-select" required>
-            <option value="">-- Pilih Kategori --</option>
-            <option value="Sparepart" {{ old('category')=='Sparepart' ? 'selected' : '' }}>Sparepart</option>
-            <option value="Elektrikal" {{ old('category')=='Elektrikal' ? 'selected' : '' }}>Elektrikal</option>
-            <option value="Material" {{ old('category')=='Material' ? 'selected' : '' }}>Material</option>
-            <option value="Consumable" {{ old('category')=='Consumable' ? 'selected' : '' }}>Consumable</option>
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label>Lokasi / Rak</label>
-        <select name="loc" class="form-select">
-            <option value="">-- Pilih Rak --</option>
-            <option value="Rak A1" {{ old('loc')=='Rak A1' ? 'selected' : '' }}>Rak A1</option>
-            <option value="Rak B2" {{ old('loc')=='Rak B2' ? 'selected' : '' }}>Rak B2</option>
-            <option value="Rak C1" {{ old('loc')=='Rak C1' ? 'selected' : '' }}>Rak C1</option>
-            <option value="Oil Area" {{ old('loc')=='Oil Area' ? 'selected' : '' }}>Oil Area</option>
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label>Qty</label>
-        <input type="number" name="qty" class="form-control" value="{{ old('qty') }}" required>
-    </div>
-
-    <div class="mb-3">
-        <label>UOM</label>
-        <select name="uom" class="form-select">
-            <option value="">-- Pilih UOM --</option>
-            <option value="pcs" {{ old('uom')=='pcs' ? 'selected' : '' }}>pcs</option>
-            <option value="meter" {{ old('uom')=='meter' ? 'selected' : '' }}>meter</option>
-            <option value="lembar" {{ old('uom')=='lembar' ? 'selected' : '' }}>lembar</option>
-            <option value="ltr" {{ old('uom')=='ltr' ? 'selected' : '' }}>ltr</option>
-            <option value="can" {{ old('uom')=='can' ? 'selected' : '' }}>can</option>
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label>Min Stock</label>
-        <input type="number" name="min_stock" class="form-control" value="{{ old('min_stock') }}">
-    </div>
-
-    <button type="submit" class="btn btn-primary">Simpan</button>
-    <a href="{{ route('products.index') }}" class="btn btn-secondary">Kembali</a>
-</form>
+{{-- 🌈 Styling --}}
+<style>
+  body {
+    background-color: #f8f9fc;
+  }
+  .card {
+    width: 100%;
+    border-radius: 12px;
+  }
+  .form-label {
+    color: #495057;
+  }
+  .form-control, .form-select {
+    border: 1px solid #ced4da;
+    transition: all 0.2s ease;
+  }
+  .form-control:focus, .form-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+  }
+</style>
 @endsection

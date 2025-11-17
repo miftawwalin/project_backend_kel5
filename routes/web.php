@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductRequestController;
-use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,20 +32,20 @@ Route::get('/products/informasi-stock', [ProductController::class, 'stockInfo'])
 */
 Route::middleware(['auth', 'role:admin', 'prevent-back-history'])->group(function () {
 
-    // Dashboard
-    Route::get('/admin/dashboard', fn() => view('admin.dashboard_admin'))->name('admin.dashboard');
+    // Dashboard ADMIN (langsung ke view dari ProductRequestController)
+    Route::get('/admin/dashboard', [ProductRequestController::class, 'adminDashboard'])->name('admin.dashboard');
 
     // CRUD Produk
     Route::resource('products', ProductController::class);
     Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
     Route::get('/add-product', fn() => view('pages.add-product'))->name('add-product');
 
-    // Manage Requests
+    // Kelola request dari user
     Route::get('/requests/admin', [ProductRequestController::class, 'index'])->name('requests.index');
     Route::post('/requests/{id}/approve', [ProductRequestController::class, 'approve'])->name('requests.approve');
     Route::post('/requests/{id}/reject', [ProductRequestController::class, 'reject'])->name('requests.reject');
 
-    // 🔹 Tambahkan agar ADMIN juga bisa membuka form request user
+    // Admin juga bisa kirim request
     Route::get('/form-request-user', [ProductRequestController::class, 'create'])->name('form-request-user');
     Route::post('/requests', [ProductRequestController::class, 'store'])->name('requests.store');
 });
@@ -57,16 +57,15 @@ Route::middleware(['auth', 'role:admin', 'prevent-back-history'])->group(functio
 */
 Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function () {
 
-    // Dashboard User
+    // Dashboard USER
     Route::get('/user/dashboard', [ProductRequestController::class, 'userDashboard'])->name('user.dashboard');
-
-    // Request Barang (Form dan List)
-    Route::get('/requests/create', [ProductRequestController::class, 'create'])->name('requests.create');
-    Route::post('/requests', [ProductRequestController::class, 'store'])->name('requests.store');
-    Route::get('/requests/user', [ProductRequestController::class, 'userIndex'])->name('requests.user');
 
     // Form Request User
     Route::get('/form-request-user', [ProductRequestController::class, 'create'])->name('form-request-user');
+    Route::post('/requests', [ProductRequestController::class, 'store'])->name('requests.store');
+
+    // Riwayat Request Barang (opsional)
+    Route::get('/form-requests/user', [ProductRequestController::class, 'create'])->name('form-requests-user');
 });
 
 /*
@@ -96,3 +95,9 @@ Route::get('/dashboard', function () {
     }
     return redirect()->route('login');
 })->name('dashboard');
+
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/admin/requests', [ProductRequestController::class, 'index'])->name('requests.index');
+    Route::post('/admin/requests/{id}/approve', [ProductRequestController::class, 'approve'])->name('requests.approve');
+    Route::post('/admin/requests/{id}/reject', [ProductRequestController::class, 'reject'])->name('requests.reject');
+});

@@ -1,130 +1,100 @@
 @extends('layouts.app')
 
+@section('title', 'Stock Information')
+
 @section('content')
 <div class="container-fluid">
-    <h3 class="mb-4">Stock Information & Item Status</h3>
 
-    {{-- Statistik Ringkas --}}
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="text-muted">TOTAL ITEMS</h6>
-                    <h3>{{ $products->total() }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="text-muted">LOW STOCK ITEMS</h6>
-                    <h3>{{ \App\Models\Product::where('qty','>',0)->whereColumn('qty','<','min_stock')->count() }}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0">
-                <div class="card-body">
-                    <h6 class="text-muted">OUT OF STOCK</h6>
-                    <h3>{{ \App\Models\Product::where('qty','<=',0)->count() }}</h3>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- Search & Filters --}}
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <form action="{{ route('products.index') }}" method="GET" class="row g-3">
-                <div class="col-md-3">
-                    <label class="form-label">Search Item</label>
-                    <input type="text" name="search" class="form-control"
-                           placeholder="Search by Item Code or Name"
-                           value="{{ request('search') }}">
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">UOM</label>
-                    <select name="uom" class="form-select">
-                        <option value="all">All UOM</option>
-                        @foreach($uoms as $uom)
-                            <option value="{{ $uom }}" {{ request('uom')==$uom ? 'selected' : '' }}>{{ $uom }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">Location</label>
-                    <select name="loc" class="form-select">
-                        <option value="all">All Locations</option>
-                        @foreach($locs as $loc)
-                            <option value="{{ $loc }}" {{ request('loc')==$loc ? 'selected' : '' }}>{{ $loc }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <label class="form-label">User/Dept</label>
-                    <select name="user" class="form-select">
-                        <option value="all">All Users</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user }}" {{ request('user')==$user ? 'selected' : '' }}>{{ $user }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-3 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary me-2">Filter</button>
-                    <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">Clear</a>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    {{-- Alert Success --}}
+    {{-- 🔔 Alert sukses --}}
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+            <i class="bi bi-check-circle-fill"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
     @endif
 
-    {{-- Form Import Excel --}}
-    <div class="card shadow-sm border-0 mb-3">
-        <div class="card-body">
-            <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data" class="row g-2">
-                @csrf
-                <div class="col-md-6">
-                    <input type="file" name="file" class="form-control" required>
+    {{-- Judul Halaman --}}
+    <h4 class="fw-bold text-primary mb-3 mt-3">Stock Information</h4>
+
+    {{-- Statistik --}}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Total Items</h6>
+                    <h3 class="fw-bold">{{ $totalItems }}</h3>
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-success">Import Excel</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Low Stock</h6>
+                    <h3 class="fw-bold text-warning">{{ $lowStock }}</h3>
                 </div>
-                <div class="col-md-3 text-end">
-                    <a href="{{ route('products.create') }}" class="btn btn-primary">+ Tambah Produk</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <h6 class="text-muted">Out of Stock</h6>
+                    <h3 class="fw-bold text-danger">{{ $outStock }}</h3>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
+
+    {{-- Tombol Tambah Produk dan Import Excel --}}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body d-flex flex-wrap justify-content-between align-items-center">
+            <div class="d-flex gap-2">
+                <a href="{{ route('products.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Tambah Produk
+                </a>
+
+                <form action="{{ route('products.import') }}" method="POST" enctype="multipart/form-data" class="d-flex gap-2 align-items-center">
+                    @csrf
+                    <input type="file" name="file" class="form-control" style="width: 230px;" accept=".xlsx,.xls,.csv" required>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-file-earmark-excel"></i> Import Excel
+                    </button>
+                </form>
+        
+    </div>
+    <div class="col-md-2 mb-3 d-flex gap-2">
+            <button type="submit" class="btn btn-primary w-50">
+              <i class="bi bi-search"></i> Filter
+            </button>
+            <a href="{{ route('informasi-stock') }}" class="btn btn-outline-secondary w-50">
+              <i class="bi bi-x-circle"></i> Clear
+            </a>
+            </div>
+                 
+        </div>   
+        </div>
 
     {{-- Tabel Produk --}}
     <div class="card shadow-sm border-0">
-        <div class="card-body p-0">
-            {{-- ✅ Tambahkan table-responsive agar muncul rollbar --}}
-            <div class="table-responsive">
-                <table class="table table-hover mb-0">
-                    <thead class="table-light">
+        <div class="card-body table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>No</th>
+                        <th>Item Code</th>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Qty</th>
+                        <th>Min Stock</th>
+                        <th>Status</th>
+                        <th>Loc</th>
+                        <th>UOM</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($products as $product)
                         <tr>
-                            <th>No</th>
-                            <th>Item Code</th>
-                            <th>Item Name</th>
-                            <th>Category</th>
-                            <th>Current Stock</th>
-                            <th>Min Stock</th>
-                            <th>Status</th>
-                            <th>Location</th>
-                            <th>UOM</th>
-                            <th>Last Updated</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($products as $product)
-                        <tr>
-                            <td>{{ $loop->iteration + ($products->currentPage()-1) * $products->perPage() }}</td>
+                            <td>{{ $loop->iteration }}</td>
                             <td>{{ $product->item_code }}</td>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->category }}</td>
@@ -132,46 +102,41 @@
                             <td>{{ $product->min_stock }}</td>
                             <td>
                                 @if($product->qty <= 0)
-                                    <span class="badge bg-danger">Out of Stock</span>
+                                    <span class="badge bg-danger">Out</span>
                                 @elseif($product->qty < $product->min_stock)
-                                    <span class="badge bg-warning text-dark">Low Stock</span>
+                                    <span class="badge bg-warning text-dark">Low</span>
                                 @else
-                                    <span class="badge bg-success">In Stock</span>
+                                    <span class="badge bg-success">OK</span>
                                 @endif
                             </td>
                             <td>{{ $product->loc }}</td>
                             <td>{{ $product->uom }}</td>
-                            <td>{{ $product->updated_at->format('Y-m-d') }}</td>
                             <td>
-                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Yakin mau hapus?')">Delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                        @empty
-                            <tr>
-                                <td colspan="11" class="text-center text-muted">Tidak ada data</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+    <div class="d-inline-flex align-items-center" style="gap: 6px;">
+        {{-- Tombol Edit --}}
+        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm px-3 py-1">
+            <i class="bi bi-pencil-square"></i> Edit
+        </a>
+
+        {{-- Tombol Hapus --}}
+        <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?')" class="d-inline">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-danger btn-sm px-3 py-1">
+                <i class="bi bi-trash"></i> Hapus
+            </button>
+        </form>
+    </div>
+</td>
+
+
+                    @empty
+                        <tr><td colspan="10" class="text-center text-muted">Belum ada data produk.</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
     </div>
-{{-- Pagination --}}
-<div class="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2">
-    <div class="text-muted small">
-        Showing {{ $products->firstItem() ?? 0 }} 
-        to {{ $products->lastItem() ?? 0 }} 
-        of {{ $products->total() }} items
-    </div>
-    <div>
-        {{ $products->onEachSide(1)->links('pagination::bootstrap-5') }}
-    </div>
-</div>
 
+</div>
 @endsection
