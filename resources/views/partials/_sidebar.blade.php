@@ -89,21 +89,6 @@
           <span class="link-title">User Management</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" data-bs-toggle="collapse" href="#settings" role="button"
-           aria-expanded="false" aria-controls="settings">
-          <i class="link-icon" data-feather="sliders"></i>
-          <span class="link-title">Configuration</span>
-          <i class="link-arrow" data-feather="chevron-down"></i>
-        </a>
-        <div class="collapse" id="settings">
-          <ul class="nav sub-menu">
-            <li class="nav-item"><a href="#" class="nav-link">General Settings</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">System Logs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Backup & Restore</a></li>
-          </ul>
-        </div>
-      </li>
       @endif
 
       {{-- ABOUT & CONTACT UNTUK SEMUA ROLE --}}
