@@ -122,44 +122,59 @@
       <div class="table-responsive">
         <table class="table table-hover mb-0">
           <thead class="table-light">
-            <tr>
-              <th>No</th>
-              <th>Item Code</th>
-              <th>Description</th>
-              <th>UOM</th>
-              <th>Location</th>
-              <th>Department</th>
-              <th>Total GR Hari Ini</th>
-              <th>Total GI Hari Ini</th>
-              <th>Ending Balance</th>
+    <tr>
+        <th>No</th>
+        <th>Item Code</th>
+        <th>Description</th>
+        <th>QTY</th>
+        <th>UOM</th>
+        <th>Location</th>
+        <th>Department</th>
+        <th>Min Stock</th>
+        <th>Status</th>
+    </tr>
+</thead>
 
-            </tr>
-          </thead>
-          <tbody>
-            @forelse ($products as $index => $p)
-              <tr>
-                <td>{{ $products->firstItem() + $index }}</td>
-                <td><code class="text-primary">{{ $p->item_code }}</code></td>
-                <td>{{ $p->name ?? '-' }}</td>
-                <td><span class="badge bg-light text-dark">{{ $p->uom }}</span></td>
-                <td><span class="badge bg-info text-dark">{{ $p->loc }}</span></td>
-                <td>
-                  <span class="badge bg-warning text-dark">
-                    {{ $p->department->name ?? '—' }}
-                  </span>
-                </td>
-                <td class="text-success fw-bold">{{ number_format($p->total_gr_september ?? 0) }}</td>
-                <td class="text-warning fw-bold">{{ number_format($p->gi_september ?? 0) }}</td>
-                <td class="text-info fw-bold">{{ number_format($p->ending_balance_september ?? 0) }}</td>
-              </tr>
-            @empty
-              <tr>
-                <td colspan="9" class="text-center text-muted py-3">
-                  <em>No data found</em>
-                </td>
-              </tr>
-            @endforelse
-          </tbody>
+<tbody>
+    @forelse ($products as $index => $p)
+    <tr>
+        <td>{{ $products->firstItem() + $index }}</td>
+
+        <td><code class="text-primary">{{ $p->item_code }}</code></td>
+
+        <td>{{ $p->name ?? '-' }}</td>
+
+        <td class="fw-bold">{{ number_format($p->qty) }}</td>
+
+        <td><span class="badge bg-light text-dark">{{ $p->uom }}</span></td>
+
+        <td><span class="badge bg-info text-dark">{{ $p->loc }}</span></td>
+
+        <td>
+            <span class="badge bg-warning text-dark">
+                {{ $p->department->name ?? '—' }}
+            </span>
+        </td>
+
+        <td class="fw-bold text-primary">{{ $p->min_stock ?? 0 }}</td>
+
+        <td>
+            @if($p->qty <= $p->min_stock)
+                <span class="badge bg-danger">LOW</span>
+            @else
+                <span class="badge bg-success">OK</span>
+            @endif
+        </td>
+    </tr>
+    @empty
+    <tr>
+        <td colspan="9" class="text-center text-muted py-3">
+            <em>No data found</em>
+        </td>
+    </tr>
+    @endforelse
+</tbody>
+
         </table>
       </div>
 

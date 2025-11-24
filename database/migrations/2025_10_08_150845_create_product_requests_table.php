@@ -13,12 +13,9 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('department_id')->nullable()->constrained('departments')->onDelete('set null');
 
-            // Relasi ke produk
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+           
 
-            // Detail permintaan
-            $table->integer('quantity');
-            $table->string('note')->nullable();
+            
 
             // Status dan approval
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');

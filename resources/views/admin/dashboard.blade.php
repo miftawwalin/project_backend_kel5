@@ -1,125 +1,145 @@
 @extends('layouts.app')
 
+@section('title', 'Dashboard Admin')
+
 @section('content')
-{{-- Statistik Ringkas --}}
-    <div class="row g-3 mb-4">
+<div class="container-fluid">
+
+    <h4 class="fw-bold mb-4">Dashboard Admin</h4>
+
+    {{-- Statistik --}}
+    <div class="row mb-4">
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm p-3 rounded-3">
-                <h6 class="text-muted mb-1">Total Users</h6>
-                <h3 class="fw-bold">{{ $totalUsers ?? 0 }}</h3>
-                <small class="text-success"><i class="bi bi-person"></i> aktif</small>
+            <div class="card p-3 shadow-sm text-center">
+                <h6>Total Request</h6>
+                <h3>{{ $totalRequests }}</h3>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm p-3 rounded-3">
-                <h6 class="text-muted mb-1">Total Items</h6>
-                <h3 class="fw-bold">{{ $totalItems ?? 0 }}</h3>
-                <small class="text-primary"><i class="bi bi-box-seam"></i> barang</small>
+            <div class="card p-3 shadow-sm text-center">
+                <h6>Pending</h6>
+                <h3 class="text-warning">{{ $pendingRequests }}</h3>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm p-3 rounded-3">
-                <h6 class="text-muted mb-1">Request Pending</h6>
-                <h3 class="fw-bold text-warning">{{ $pendingRequests ?? 0 }}</h3>
-                <small class="text-warning"><i class="bi bi-clock-history"></i> menunggu konfirmasi</small>
+            <div class="card p-3 shadow-sm text-center">
+                <h6>Approved</h6>
+                <h3 class="text-success">{{ $approvedRequests }}</h3>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card border-0 shadow-sm p-3 rounded-3">
-                <h6 class="text-muted mb-1">Low Stock Items</h6>
-                <h3 class="fw-bold text-danger">{{ $lowStock ?? 0 }}</h3>
-                <small class="text-danger"><i class="bi bi-exclamation-triangle"></i> stok menipis</small>
+            <div class="card p-3 shadow-sm text-center">
+                <h6>Rejected</h6>
+                <h3 class="text-danger">{{ $rejectedRequests }}</h3>
             </div>
         </div>
     </div>
 
-    {{-- Grafik Stok --}}
-    <div class="card mb-4 border-0 shadow-sm rounded-3">
-        <div class="card-header bg-white fw-bold">Grafik Barang Masuk & Keluar</div>
+    {{-- Bar Chart --}}
+    <div class="card mt-4">
+        <div class="card-header fw-bold">Statistik Status Request</div>
         <div class="card-body">
-            <canvas id="stockChart" height="100"></canvas>
+            <canvas id="statusChart"></canvas>
         </div>
     </div>
 
-    {{-- Aktivitas Terbaru --}}
-    <div class="card border-0 shadow-sm rounded-3">
-        <div class="card-header bg-white fw-bold">Aktivitas Terbaru</div>
+    {{-- Line Chart --}}
+    <div class="card mt-4">
+        <div class="card-header fw-bold">Trend Request Per Bulan</div>
         <div class="card-body">
-            <table class="table table-hover align-middle">
+            <canvas id="monthlyChart"></canvas>
+        </div>
+    </div>
+
+    <a href="{{ route('export.request') }}" class="btn btn-success mb-3">
+    Export Request Excel
+</a>
+
+<a href="{{ route('export.product') }}" class="btn btn-primary mb-3">
+    Export Product Excel
+</a>
+
+
+    {{-- Latest Requests --}}
+    <div class="card shadow-sm">
+        <div class="card-header fw-bold">Permintaan Barang Terbaru</div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
                 <thead>
                     <tr>
+                        <th>No</th>
                         <th>User</th>
                         <th>Barang</th>
+                        <th>Qty</th>
                         <th>Status</th>
                         <th>Tanggal</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($recentActivities ?? [] as $activity)
+                    @foreach ($latestRequests as $req)
                     <tr>
-                        <td>{{ $activity->user->name }}</td>
-                        <td>{{ $activity->item_name }}</td>
+                        <td>{{ $req->id }}</td>
+                        <td>{{ $req->user->name }}</td>
+                       <td>
+    {{ $req->items->first()->product->name ?? '-' }}
+</td>
+
+<td>
+    {{ $req->items->sum('qty') }}
+</td>
+
                         <td>
-                            @if ($activity->status == 'approved')
-                                <span class="badge bg-success">Approved</span>
-                            @elseif ($activity->status == 'rejected')
-                                <span class="badge bg-danger">Rejected</span>
-                            @else
-                                <span class="badge bg-warning text-dark">Pending</span>
-                            @endif
+                            <span class="badge bg-{{ $req->status == 'approved' ? 'success' : ($req->status == 'pending' ? 'warning' : 'danger') }}">
+                                {{ ucfirst($req->status) }}
+                            </span>
                         </td>
-                        <td>{{ $activity->created_at->format('d M Y') }}</td>
+                        <td>{{ $req->created_at->format('d M Y') }}</td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="4" class="text-center text-muted">Belum ada aktivitas terbaru.</td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-</div>
 
-{{-- Chart.js --}}
+</div>
+@endsection
+
+@section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
-    const ctx = document.getElementById('stockChart').getContext('2d');
-    const stockChart = new Chart(ctx, {
+    // === BAR CHART (Pending / Approved / Rejected) ===
+    new Chart(document.getElementById('statusChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Pending', 'Approved', 'Rejected'],
+            datasets: [{
+                label: 'Jumlah Request',
+                data: [
+                    {{ $pendingRequests }},
+                    {{ $approvedRequests }},
+                    {{ $rejectedRequests }}
+                ],
+                backgroundColor: ['#f1c40f', '#27ae60', '#e74c3c']
+            }]
+        }
+    });
+
+    // === LINE CHART (Request Per Bulan) ===
+    new Chart(document.getElementById('monthlyChart'), {
         type: 'line',
         data: {
-            labels: {!! json_encode($chartLabels ?? ['Sen', 'Sel', 'Rab', 'Kam', 'Jum']) !!},
-            datasets: [
-                {
-                    label: 'Barang Masuk',
-                    data: {!! json_encode($itemsIn ?? [12, 19, 7, 11, 5]) !!},
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3
-                },
-                {
-                    label: 'Barang Keluar',
-                    data: {!! json_encode($itemsOut ?? [8, 15, 12, 9, 4]) !!},
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 2,
-                    fill: false,
-                    tension: 0.3
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
+            labels: ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'],
+            datasets: [{
+                label: 'Request Per Bulan',
+                data: [
+                    @for ($i = 1; $i <= 12; $i++)
+                        {{ $monthly[$i] ?? 0 }},
+                    @endfor
+                ],
+                borderColor: '#3498db',
+                tension: 0.3
+            }]
         }
     });
 </script>

@@ -12,13 +12,10 @@ return new class extends Migration {
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('role',['admin','user'])->default('user');
-            $table->unsignedBigInteger('department_id')->nullable();
-            $table->string('npk')->nullable();
             $table->rememberToken();
             $table->timestamps();
 
-            // relasi ke departments
-            $table->foreign('department_id')->references('id')->on('departments')->onDelete('set null');
+            
         });
     }
 

@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $role
+ * 
+ */
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -15,9 +23,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role',            // admin atau user
-        'department_id',
-        'npk'
+        'role'            
+        
     ];
 
     protected $hidden = [

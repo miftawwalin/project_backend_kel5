@@ -13,7 +13,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>#</th><th>User</th><th>Barang</th><th>Jumlah</th><th>Status</th><th>Aksi</th>
+                <th>No</th><th>User</th><th>Barang</th><th>Jumlah</th><th>Status</th><th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -21,8 +21,26 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $req->user->name ?? '-' }}</td>
-                <td>{{ $req->product->name ?? '-' }}</td>
-                <td>{{ $req->quantity }}</td>
+                <td>
+    @if($req->items->count() > 0)
+        @foreach($req->items as $i)
+            • {{ $i->product->name ?? '-' }} <br>
+        @endforeach
+    @else
+        -
+    @endif
+</td>
+
+<td>
+    @if($req->items->count() > 0)
+        @foreach($req->items as $i)
+            • {{ $i->qty }} <br>
+        @endforeach
+    @else
+        -
+    @endif
+</td>
+
                 <td>
                     <span class="badge 
                         @if($req->status=='Approved') bg-success 

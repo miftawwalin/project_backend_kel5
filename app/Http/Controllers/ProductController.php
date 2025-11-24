@@ -92,16 +92,15 @@ public function stockInfo(Request $request)
 
     // === Perhitungan GR / GI harian (tanpa kolom 'type') ===
     // Untuk sementara GR dan GI sama-sama dihitung dari request yang disetujui hari ini
-    $totalGR = \App\Models\ProductRequest::where('status', 'Approved')
-        ->whereDate('created_at', $today)
-        ->sum('quantity');
+    $totalItems = Product::count();
+$lowStock = Product::whereColumn('qty', '<', 'min_stock')->count();
+$outStock = Product::where('qty', '<=', 0)->count();
 
-    $totalGI = \App\Models\ProductRequest::where('status', 'Approved')
-        ->whereDate('created_at', $today)
-        ->sum('quantity');
+// === Perhitungan GR / GI harian — DISABLE sementara ===
+$totalGR = 0;
+$totalGI = 0;
 
-    $totalEnding = Product::sum('qty');
-
+$totalEnding = Product::sum('qty');
     // Kirim ke view
     return view('pages.stock-information', compact(
         'products', 'uoms', 'locs', 'departments',

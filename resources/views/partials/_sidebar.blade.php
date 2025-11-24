@@ -28,19 +28,25 @@
       <li class="nav-item nav-category">Data Management</li>
       {{-- REQUEST FORM UNTUK SEMUA ROLE --}}
 
-      <li class="nav-item">
-        <a href="{{ route('form-request-admin') }}" class="nav-link {{ request()->routeIs('form-request-admin*') ? 'active' : '' }}">
-          <i class="link-icon" data-feather="clipboard"></i>
-          <span class="link-title">Request Form By Admin</span>
-        </a>
-      </li>
+      
 
       <li class="nav-item">
-        <a href="{{ route('form-request-user') }}" class="nav-link {{ request()->routeIs('form-request-user*') ? 'active' : '' }}">
-          <i class="link-icon" data-feather="edit-3"></i>
-          <span class="link-title">Request Form By User</span>
-        </a>
-      </li>
+    <a href="{{ route('form-request-user') }}"
+       class="nav-link {{ request()->routeIs('form-request-user*') ? 'active' : '' }}">
+        <i class="link-icon" data-feather="edit"></i>
+        <span class="link-title">Request By User</span>
+    </a>
+</li>
+
+      @if(auth()->user()->role === 'admin')
+<li class="nav-item">
+    <a href="{{ route('admin.form-request') }}"
+       class="nav-link {{ request()->routeIs('admin.form-request*') ? 'active' : '' }}">
+        <i class="link-icon" data-feather="file-plus"></i>
+        <span class="link-title">Request By Admin</span>
+    </a>
+</li>
+@endif
 
       <li class="nav-item">
         <a href="{{ route('informasi-stock') }}" class="nav-link {{ request()->routeIs('informasi-stock*') ? 'active' : '' }}">
@@ -49,12 +55,16 @@
         </a>
       </li>
 
-      <li class="nav-item">
-        <a href="{{ route('requests.index') }}" class="nav-link {{ request()->routeIs('requests.index*') ? 'active' : '' }}">
-          <i class="link-icon" data-feather="check-circle"></i>
-          <span class="link-title">Approve Request</span>
-        </a>
-      </li>
+      @if(auth()->user()->role === 'admin')
+<li class="nav-item">
+    <a href="{{ route('requests.index') }}"
+       class="nav-link {{ request()->routeIs('requests.index*') ? 'active' : '' }}">
+        <i class="link-icon" data-feather="check-circle"></i>
+        <span class="link-title">Approve Request</span>
+    </a>
+</li>
+@endif
+
 
       {{-- DATA MASTER (ADMIN ONLY) --}}
       @if(auth()->user()->role === 'admin')

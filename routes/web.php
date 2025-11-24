@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductRequestController;
+use App\Http\Controllers\ExportController;
 
 /*
 |--------------------------------------------------------------------------
-| Authentication Routes
+| Authentication
 |--------------------------------------------------------------------------
 */
 Route::get('/', fn() => redirect()->route('login'));
@@ -18,59 +19,83 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 /*
 |--------------------------------------------------------------------------
-| INFORMASI STOK (ADMIN & USER)
+| Stok Info (Admin & User)
 |--------------------------------------------------------------------------
 */
 Route::get('/products/informasi-stock', [ProductController::class, 'stockInfo'])
-    ->middleware(['auth', 'prevent-back-history'])
+    ->middleware(['auth'])
     ->name('informasi-stock');
 
 /*
 |--------------------------------------------------------------------------
-| ADMIN ROUTES
+| Request By User (ADMIN & USER)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
+    Route::get('/form-request-user', [ProductRequestController::class, 'create'])
+        ->name('form-request-user');
+
+    Route::post('/requests', [ProductRequestController::class, 'store'])
+    ->name('requests.store');
+
+});
+
+/*
+|--------------------------------------------------------------------------
+| Admin Routes
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin', 'prevent-back-history'])->group(function () {
+    Route::get('/add-product', function () {
+    return view('pages.add-product');
+    })->name('add-product');
 
-    // Dashboard ADMIN (langsung ke view dari ProductRequestController)
-    Route::get('/admin/dashboard', [ProductRequestController::class, 'adminDashboard'])->name('admin.dashboard');
+    // Dashboard Admin
+    Route::get('/admin/dashboard', [ProductRequestController::class, 'adminDashboard'])
+        ->name('admin.dashboard');
 
-    // CRUD Produk
+    // Request by admin
+    Route::get('/admin/form-request', [ProductRequestController::class, 'adminForm'])
+        ->name('admin.form-request');
+
+
+    // Approve request
+    Route::get('/requests/admin', [ProductRequestController::class, 'index'])
+        ->name('requests.index');
+
+    Route::post('/requests/{id}/approve', [ProductRequestController::class, 'approve'])
+        ->name('requests.approve');
+
+    Route::post('/requests/{id}/reject', [ProductRequestController::class, 'reject'])
+        ->name('requests.reject');
+
+    // Export
+    Route::get('/export/request', [ExportController::class, 'exportRequest'])
+    ->name('export.request');
+
+Route::get('/export/product', [ExportController::class, 'exportProduct'])
+    ->name('export.product');
+
+
+    // Product CRUD
     Route::resource('products', ProductController::class);
-    Route::post('/products/import', [ProductController::class, 'import'])->name('products.import');
-    Route::get('/add-product', fn() => view('pages.add-product'))->name('add-product');
-
-    // Kelola request dari user
-    Route::get('/requests/admin', [ProductRequestController::class, 'index'])->name('requests.index');
-    Route::post('/requests/{id}/approve', [ProductRequestController::class, 'approve'])->name('requests.approve');
-    Route::post('/requests/{id}/reject', [ProductRequestController::class, 'reject'])->name('requests.reject');
-
-    // Admin juga bisa kirim request
-    Route::get('/form-request-user', [ProductRequestController::class, 'create'])->name('form-request-user');
-    Route::post('/requests', [ProductRequestController::class, 'store'])->name('requests.store');
+    Route::post('/products/import', [ProductController::class, 'import'])
+        ->name('products.import');
 });
 
 /*
 |--------------------------------------------------------------------------
-| USER ROUTES
+| User Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:user', 'prevent-back-history'])->group(function () {
-
-    // Dashboard USER
-    Route::get('/user/dashboard', [ProductRequestController::class, 'userDashboard'])->name('user.dashboard');
-
-    // Form Request User
-    Route::get('/form-request-user', [ProductRequestController::class, 'create'])->name('form-request-user');
-    Route::post('/requests', [ProductRequestController::class, 'store'])->name('requests.store');
-
-    // Riwayat Request Barang (opsional)
-    Route::get('/form-requests/user', [ProductRequestController::class, 'create'])->name('form-requests-user');
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/user/dashboard', [ProductRequestController::class, 'userDashboard'])
+        ->name('user.dashboard');
 });
 
 /*
 |--------------------------------------------------------------------------
-| GENERAL PAGES
+| Static Pages
 |--------------------------------------------------------------------------
 */
 Route::get('/user-informasi', fn() => view('pages.user-informasi'))->name('user-informasi');
@@ -80,11 +105,10 @@ Route::get('/inventory-movements', fn() => view('pages.inventory-movements'))->n
 Route::get('/inventory-reports', fn() => view('pages.inventory-reports'))->name('inventory-reports');
 Route::get('/about', fn() => view('pages.about'))->name('about');
 Route::get('/contact', fn() => view('pages.contact'))->name('contact');
-Route::get('/form-request-admin', fn() => view('pages.form-request-admin'))->name('form-request-admin');
 
 /*
 |--------------------------------------------------------------------------
-| UNIVERSAL DASHBOARD REDIRECT
+| Dashboard redirect
 |--------------------------------------------------------------------------
 */
 Route::get('/dashboard', function () {
@@ -95,9 +119,3 @@ Route::get('/dashboard', function () {
     }
     return redirect()->route('login');
 })->name('dashboard');
-
-Route::middleware(['auth', 'is_admin'])->group(function () {
-    Route::get('/admin/requests', [ProductRequestController::class, 'index'])->name('requests.index');
-    Route::post('/admin/requests/{id}/approve', [ProductRequestController::class, 'approve'])->name('requests.approve');
-    Route::post('/admin/requests/{id}/reject', [ProductRequestController::class, 'reject'])->name('requests.reject');
-});
