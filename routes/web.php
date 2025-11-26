@@ -45,21 +45,28 @@ Route::middleware(['auth'])->group(function () {
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:admin', 'prevent-back-history'])->group(function () {
-    Route::get('/add-product', function () {
-    return view('pages.add-product');
-    })->name('add-product');
+    Route::middleware(['auth', 'role:admin', 'prevent-back-history'])->group(function () {
+
+    Route::get('/add-product', fn() => view('pages.add-product'))
+        ->name('add-product');
 
     // Dashboard Admin
     Route::get('/admin/dashboard', [ProductRequestController::class, 'adminDashboard'])
         ->name('admin.dashboard');
 
-    // Request by admin
+    // Form request admin
     Route::get('/admin/form-request', [ProductRequestController::class, 'adminForm'])
         ->name('admin.form-request');
 
+    // Scan product (AJAX)
+    Route::get('/admin/get-product/{code}', [ProductRequestController::class, 'getProduct'])
+        ->name('admin.get-product');
 
-    // Approve request
+    // Simpan request admin
+    Route::post('/admin/store-request', [ProductRequestController::class, 'storeByAdmin'])
+        ->name('admin.store-request');
+
+    // List request pending/approved/rejected
     Route::get('/requests/admin', [ProductRequestController::class, 'index'])
         ->name('requests.index');
 
@@ -71,13 +78,12 @@ Route::middleware(['auth', 'role:admin', 'prevent-back-history'])->group(functio
 
     // Export
     Route::get('/export/request', [ExportController::class, 'exportRequest'])
-    ->name('export.request');
+        ->name('export.request');
 
-Route::get('/export/product', [ExportController::class, 'exportProduct'])
-    ->name('export.product');
+    Route::get('/export/product', [ExportController::class, 'exportProduct'])
+        ->name('export.product');
 
-
-    // Product CRUD
+    // CRUD Product
     Route::resource('products', ProductController::class);
     Route::post('/products/import', [ProductController::class, 'import'])
         ->name('products.import');
