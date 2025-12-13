@@ -104,6 +104,10 @@
 
 
     //Add active class to nav-link based on url dynamically
+    /* 
+    The JS active class logic causes issues because it fuzzy matches the URL. 
+    We are handling active states via Blade in the view files.
+    
     function addActiveClass(element) {
         if (current === "") {
           //for root url
@@ -139,6 +143,7 @@
       var $this = $(this);
       addActiveClass($this);
     })
+    */
 
 
     //  open sidebar-folded when hover

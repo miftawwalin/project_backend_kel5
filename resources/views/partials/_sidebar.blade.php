@@ -17,8 +17,8 @@
 
       {{-- MAIN --}}
       <li class="nav-item nav-category">Main</li>
-      <li class="nav-item">
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard*') ? 'active' : '' }}">
+      <li class="nav-item {{ request()->routeIs('dashboard') || request()->routeIs('admin.dashboard') || request()->routeIs('user.dashboard') ? 'active' : '' }}">
+        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') || request()->routeIs('admin.dashboard') || request()->routeIs('user.dashboard') ? 'active' : '' }}">
           <i class="link-icon" data-feather="home"></i>
           <span class="link-title">Dashboard</span>
         </a>
@@ -30,35 +30,35 @@
 
       
 
-      <li class="nav-item">
+      <li class="nav-item {{ request()->routeIs('form-request-user') || request()->routeIs('requests.store') ? 'active' : '' }}">
     <a href="{{ route('form-request-user') }}"
-       class="nav-link {{ request()->routeIs('form-request-user*') ? 'active' : '' }}">
+       class="nav-link {{ request()->routeIs('form-request-user') || request()->routeIs('requests.store') ? 'active' : '' }}">
         <i class="link-icon" data-feather="edit"></i>
         <span class="link-title">Request By User</span>
     </a>
 </li>
 
       @if(auth()->user()->role === 'admin')
-<li class="nav-item">
+<li class="nav-item {{ request()->routeIs('admin.form-request') || request()->routeIs('admin.store-request') || request()->routeIs('admin.get-product') ? 'active' : '' }}">
     <a href="{{ route('admin.form-request') }}"
-       class="nav-link {{ request()->routeIs('admin.form-request*') ? 'active' : '' }}">
+       class="nav-link {{ request()->routeIs('admin.form-request') || request()->routeIs('admin.store-request') || request()->routeIs('admin.get-product') ? 'active' : '' }}">
         <i class="link-icon" data-feather="file-plus"></i>
         <span class="link-title">Request By Admin</span>
     </a>
 </li>
 @endif
 
-      <li class="nav-item">
-        <a href="{{ route('informasi-stock') }}" class="nav-link {{ request()->routeIs('informasi-stock*') ? 'active' : '' }}">
+      <li class="nav-item {{ request()->routeIs('informasi-stock') ? 'active' : '' }}">
+        <a href="{{ route('informasi-stock') }}" class="nav-link {{ request()->routeIs('informasi-stock') ? 'active' : '' }}">
           <i class="link-icon" data-feather="package"></i>
           <span class="link-title">Stock Information</span>
         </a>
       </li>
 
       @if(auth()->user()->role === 'admin')
-<li class="nav-item">
+<li class="nav-item {{ request()->routeIs('requests.index') || request()->routeIs('requests.approve') || request()->routeIs('requests.reject') ? 'active' : '' }}">
     <a href="{{ route('requests.index') }}"
-       class="nav-link {{ request()->routeIs('requests.index*') ? 'active' : '' }}">
+       class="nav-link {{ request()->routeIs('requests.index') || request()->routeIs('requests.approve') || request()->routeIs('requests.reject') ? 'active' : '' }}">
         <i class="link-icon" data-feather="check-circle"></i>
         <span class="link-title">Approve Request</span>
     </a>
@@ -70,20 +70,20 @@
       @if(auth()->user()->role === 'admin')
       <li class="nav-item nav-category">Data Master</li>
       {{-- ubahan ryan *u admin --}}
-      <li class="nav-item">
-        <a href="{{ route('inventory-dashboard') }}" class="nav-link {{ request()->routeIs('inventory-dashboard*') ? 'active' : '' }}">
+      <li class="nav-item {{ request()->routeIs('inventory-dashboard') || request()->is('inventory-dashboard') ? 'active' : '' }}">
+        <a href="{{ route('inventory-dashboard') }}" class="nav-link {{ request()->routeIs('inventory-dashboard') || request()->is('inventory-dashboard') ? 'active' : '' }}">
           <i class="link-icon" data-feather="trending-up"></i>
           <span class="link-title">Inventory Dashboard</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a href="{{ route('add-product') }}" class="nav-link {{ request()->routeIs('add-product*') ? 'active' : '' }}">
+      <li class="nav-item {{ request()->routeIs('add-product') || request()->routeIs('products.*') ? 'active' : '' }}">
+        <a href="{{ route('add-product') }}" class="nav-link {{ request()->routeIs('add-product') || request()->routeIs('products.*') ? 'active' : '' }}">
           <i class="link-icon" data-feather="plus-circle"></i>
           <span class="link-title">Add Product</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a href="{{ route('inventory-movements') }}" class="nav-link {{ request()->routeIs('inventory-movements*') ? 'active' : '' }}">
+      <li class="nav-item {{ request()->routeIs('inventory-movements') || request()->routeIs('inventory-items') || request()->routeIs('inventory-reports') ? 'active' : '' }}">
+        <a href="{{ route('inventory-movements') }}" class="nav-link {{ request()->routeIs('inventory-movements') || request()->routeIs('inventory-items') || request()->routeIs('inventory-reports') ? 'active' : '' }}">
           <i class="link-icon" data-feather="refresh-cw"></i>
           <span class="link-title">Stock Movements</span>
         </a>
@@ -93,8 +93,8 @@
       {{-- SETTINGS (ADMIN ONLY) --}}
       @if(auth()->user()->role === 'admin')
       <li class="nav-item nav-category">Settings</li>
-      <li class="nav-item">
-        <a href="{{ route('user-informasi') }}" class="nav-link {{ request()->routeIs('user-informasi*') ? 'active' : '' }}">
+      <li class="nav-item {{ request()->routeIs('user-informasi') ? 'active' : '' }}">
+        <a href="{{ route('user-informasi') }}" class="nav-link {{ request()->routeIs('user-informasi') ? 'active' : '' }}">
           <i class="link-icon" data-feather="users"></i>
           <span class="link-title">User Management</span>
         </a>
@@ -103,14 +103,14 @@
 
       {{-- ABOUT & CONTACT UNTUK SEMUA ROLE --}}
       <li class="nav-item nav-category">Information</li>
-      <li class="nav-item">
-        <a href="{{ route('about') }}" class="nav-link {{ request()->routeIs('about*') ? 'active' : '' }}">
+      <li class="nav-item {{ request()->routeIs('about') ? 'active' : '' }}">
+        <a href="{{ route('about') }}" class="nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
           <i class="link-icon" data-feather="info"></i>
           <span class="link-title">About</span>
         </a>
       </li>
-      <li class="nav-item">
-        <a href="{{ route('contact') }}" class="nav-link {{ request()->routeIs('contact*') ? 'active' : '' }}">
+      <li class="nav-item {{ request()->routeIs('contact') ? 'active' : '' }}">
+        <a href="{{ route('contact') }}" class="nav-link {{ request()->routeIs('contact') ? 'active' : '' }}">
           <i class="link-icon" data-feather="phone"></i>
           <span class="link-title">Contact</span>
         </a>

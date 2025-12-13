@@ -1,0 +1,18 @@
+/* Custom Sidebar Active State to make it "Thick" */
+.sidebar .sidebar-body .nav .nav-item.active .nav-link {
+    font-weight: 700 !important; /* Bold text */
+    background-color: rgba(101, 113, 255, 0.1) !important; /* Slight background tint using primary color RGB */
+    border-left: 5px solid #6571ff !important; /* Thick left border */
+}
+
+/* Thicken the icon */
+.sidebar .sidebar-body .nav .nav-item.active .nav-link .link-icon {
+    stroke-width: 3px !important; 
+    color: #6571ff !important;
+}
+
+/* Thicken the text */
+.sidebar .sidebar-body .nav .nav-item.active .nav-link .link-title {
+    font-weight: 800 !important;
+    color: #6571ff !important;
+}

@@ -19,6 +19,7 @@
 	<link rel="stylesheet" href="{{ asset('assets/vendors/flag-icon-css/css/flag-icon.min.css') }}">
 	<link id="theme-stylesheet" rel="stylesheet" href="{{ asset('assets/css/demo1/style.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/css/theme-switcher.css') }}">
+	<link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 	<link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" />
 </head>
 <body>
