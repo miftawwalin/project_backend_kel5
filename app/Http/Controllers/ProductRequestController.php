@@ -241,50 +241,52 @@ public function getProduct($code)
 }
 
 
-/**
- * SIMPAN REQUEST ADMIN via SCAN
- */
-public function storeByAdmin(Request $request)
-{
-    // Validasi
-    $request->validate([
-        'tanggal' => 'required|date',
-        'npk_nama' => 'required',
-        'items' => 'required'
-    ]);
-
-    // Ubah JSON string → array
-    $items = json_decode($request->items, true);
-
-    if (!$items || count($items) < 1) {
-        return back()->with('error', 'Item request tidak boleh kosong!');
-    }
-
-    // Buat header request
-    $header = ProductRequest::create([
-        'user_id' => Auth::id(),
-        'department_id' => Auth::user()->department_id,
-        'status' => 'pending',
-        'note' => 'Request admin via scan kamera',
-        'request_date' => $request->tanggal,
-        'npk_nama' => $request->npk_nama
-    ]);
-
-    // Simpan item-detail
-    foreach ($items as $i) {
-
-        $product = Product::where('item_code', $i['itemCode'])->first();
-
-        ProductRequestItem::create([
-            'product_request_id' => $header->id,
-            'product_id' => $product?->id,
-            'qty' => $i['qty'],
-            'validated' => false
+    // SIMPAN REQUEST ADMIN via SCAN
+    public function storeByAdmin(Request $request)
+    {
+        // Validasi
+        $request->validate([
+            'tanggal' => 'required|date',
+            'npk_nama' => 'required',
+            'items' => 'required'
         ]);
-    }
 
-    return redirect()
-        ->route('requests.index')
-        ->with('success', 'Request berhasil dibuat dan menunggu approval!');
-}
+        // Ubah JSON string → array
+        $items = json_decode($request->items, true);
+
+        if (!$items || count($items) < 1) {
+            return back()->with('error', 'Item request tidak boleh kosong!');
+        }
+
+        try {
+            // Buat header request
+            $header = ProductRequest::create([
+                'user_id' => Auth::id(),
+                'department_id' => Auth::user()->department_id,
+                'status' => 'pending', 
+                'note' => 'Request Input By Admin',
+                'request_date' => $request->tanggal,
+                'npk_nama' => $request->npk_nama
+            ]);
+
+            // Simpan item-detail
+            foreach ($items as $i) {
+                $product = Product::where('item_code', $i['itemCode'])->first();
+
+                ProductRequestItem::create([
+                    'product_request_id' => $header->id,
+                    'product_id' => $product?->id,
+                    'qty' => $i['qty'],
+                    'validated' => false
+                ]);
+            }
+
+            return redirect()
+                ->route('requests.index')
+                ->with('success', 'Request berhasil dibuat dan menunggu approval!');
+        
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }

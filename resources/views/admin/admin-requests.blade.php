@@ -13,14 +13,15 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>No</th><th>User</th><th>Barang</th><th>Jumlah</th><th>Status</th><th>Aksi</th>
+                <th>No</th><th>User</th><th>Note</th><th>Barang</th><th>Jumlah</th><th>Status</th><th>Aksi</th>
             </tr>
         </thead>
         <tbody>
             @forelse($requests as $req)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td>{{ $req->user->name ?? '-' }}</td>
+                <td>{{ $req->npk_nama ?? $req->user->name ?? '-' }}</td>
+                <td><small class="text-muted">{{ $req->note ?? '-' }}</small></td>
                 <td>
     @if($req->items->count() > 0)
         @foreach($req->items as $i)
@@ -65,7 +66,7 @@
                 </td>
             </tr>
             @empty
-                <tr><td colspan="6" class="text-center">Tidak ada permintaan.</td></tr>
+                <tr><td colspan="7" class="text-center">Tidak ada permintaan.</td></tr>
             @endforelse
         </tbody>
     </table>
