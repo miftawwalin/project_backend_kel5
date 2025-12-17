@@ -84,7 +84,7 @@
                                 <th>LOC</th>
                                 <th>QTY</th>
                                 <th>UOM</th>
-                                <th>NPK/NAMA</th>
+                                <th>NOTE</th>
                             </tr>
                         </thead>
                         <tbody id="itemTableBody"></tbody>
@@ -118,8 +118,9 @@
                         <option value="{{ $p->item_code }}"
                                 data-name="{{ $p->name }}"
                                 data-loc="{{ $p->loc }}"
-                                data-uom="{{ $p->uom }}">
-                                {{ $p->item_code }} — {{ $p->name }}
+                                data-uom="{{ $p->uom }}"
+                                data-stock="{{ $p->qty }}">
+                                {{ $p->item_code }} — {{ $p->name }} (Stock: {{ $p->qty }})
                         </option>
                     @endforeach
                 </select>
@@ -145,12 +146,13 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Qty</label>
+                    <label>Qty (Max: <span id="maxStockDisplay">0</span>)</label>
                     <input type="number" id="qty" min="1" class="form-control">
+                    <input type="hidden" id="maxStock"> 
                 </div>
 
                 <div class="mb-3">
-                    <label>Catatan</label>
+                    <label>Note</label>
                     <input type="text" id="npkInput" class="form-control">
                 </div>
 
@@ -175,7 +177,8 @@ $(document).ready(function () {
     // ACTIVE SELECT2
     $('#itemSelect').select2({
         theme: 'bootstrap-5',
-        width: '100%'
+        width: '100%',
+        dropdownParent: $('#modalAddItem')
     });
 
     // AUTO FILL
@@ -187,8 +190,12 @@ $(document).ready(function () {
         $('#namaBarang').val(option.dataset.name);
         $('#loc').val(option.dataset.loc);
         $('#uom').val(option.dataset.uom);
+        
+        // Set Max Stock
+        $('#maxStock').val(option.dataset.stock);
+        $('#maxStockDisplay').text(option.dataset.stock);
 
-        console.log("Autofill:", option.dataset.name);
+        console.log("Autofill:", option.dataset.name, "Stock:", option.dataset.stock);
     });
 
 });
@@ -200,11 +207,24 @@ let items = [];
 
 function addItem() {
 
+    let maxStock = parseInt($('#maxStock').val()) || 0;
+    let reqQty = parseInt($('#qty').val()) || 0;
+
+    if (reqQty <= 0) {
+        alert("Qty harus lebih dari 0!");
+        return;
+    }
+
+    if (reqQty > maxStock) {
+        alert(`Tidak boleh melebihi stock! Stock hanya ${maxStock}`);
+        return;
+    }
+
     let item = {
         code: $('#itemCode').val(),
         nama: $('#namaBarang').val(),
         loc: $('#loc').val(),
-        qty: $('#qty').val(),
+        qty: reqQty,
         uom: $('#uom').val(),
         npk: $('#npkInput').val()
     };
@@ -222,6 +242,8 @@ function addItem() {
     $('#qty').val('');
     $('#uom').val('');
     $('#npkInput').val('');
+    $('#maxStock').val(0);
+    $('#maxStockDisplay').text('0');
 
     bootstrap.Modal.getInstance(document.getElementById('modalAddItem')).hide();
 }
@@ -239,7 +261,7 @@ function updateTable() {
                 <td>${item.loc}</td>
                 <td>${item.qty}</td>
                 <td>${item.uom}</td>
-                <td>${item.catatan}</td>
+                <td>${item.npk}</td>
             </tr>
         `);
     });

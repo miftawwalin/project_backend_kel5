@@ -51,6 +51,16 @@
         <input type="number" name="min_stock" class="form-control" value="{{ old('min_stock', $product->min_stock) }}">
     </div>
 
+    <div class="mb-3">
+        <label>Stock Max</label>
+        <input type="number" name="stock_max" class="form-control" value="{{ old('stock_max', $product->stock_max) }}">
+    </div>
+
+    <div class="mb-3">
+        <label>Titik Order</label>
+        <input type="number" name="titik_order" class="form-control" value="{{ old('titik_order', $product->titik_order) }}">
+    </div>
+
     <button type="submit" class="btn btn-primary">Update</button>
     <a href="{{ route('products.index') }}" class="btn btn-secondary">Kembali</a>
 </form>

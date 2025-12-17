@@ -201,26 +201,56 @@ function selectProduksi(x) {
 /* ==============================
    SCAN KAMERA
 ============================== */
+/* ==============================
+   SCAN KAMERA
+============================== */
 function startScanner() {
   document.getElementById("scanner").style.display = "block";
 
   if (!html5Qr) {
-    html5Qr = new Html5Qrcode("scanner");
+    // Konfigurasi format barcode (termasuk 1D Barcode)
+    // Pastikan library html5-qrcode terbaru dimuat
+    const formats = [
+        Html5QrcodeSupportedFormats.QR_CODE,
+        Html5QrcodeSupportedFormats.CODE_128,
+        Html5QrcodeSupportedFormats.CODE_39,
+        Html5QrcodeSupportedFormats.EAN_13,
+        Html5QrcodeSupportedFormats.UPC_A
+    ];
+    html5Qr = new Html5Qrcode("scanner", { formatsToSupport: formats, verbose: false });
   }
+
+  const config = { 
+      fps: 20, 
+      qrbox: { width: 250, height: 250 }, // Kotak persegi untuk QR Code
+      aspectRatio: 1.0
+  };
 
   html5Qr.start(
     { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
+    config,
     (decodedText) => {
+      console.log("Scanned:", decodedText);
       document.getElementById("itemCode").value = decodedText;
-      fetchProduct(decodedText);
-      html5Qr.stop();
-      document.getElementById("scanner").style.display = "none";
+      
+      // Trigger event change agar fetchProduct jalan
+      document.getElementById("itemCode").dispatchEvent(new Event('change'));
+      
+      html5Qr.stop().then(() => {
+          document.getElementById("scanner").style.display = "none";
+      });
     },
-    (error) => {}
-  );
+    (errorMessage) => {
+        // ignore errors (scanning...)
+    }
+  ).catch(err => {
+      alert("Gagal mengakses kamera: " + err);
+  });
 }
 
+/* ==============================
+   AJAX GET PRODUCT FROM DATABASE
+============================== */
 /* ==============================
    AJAX GET PRODUCT FROM DATABASE
 ============================== */
@@ -238,13 +268,15 @@ function fetchProduct(code) {
       document.getElementById("namaBarang").value = p.name;
       document.getElementById("loc").value = p.loc;
       document.getElementById("uom").value = p.uom;
-    });
+    })
+    .catch(err => console.error(err));
 }
 
-document.getElementById("itemCode").addEventListener("input", function(){
+document.getElementById("itemCode").addEventListener("change", function(){
   let code = this.value.trim();
   if (code.length >= 3) fetchProduct(code);
 });
+
 /* ==============================
    TAMBAH ITEM KE TABLE
 ============================== */
@@ -267,7 +299,11 @@ function addRequestItem() {
 
   updateTable();
 
+  // Reset Input but keep NPK/Nama maybe? User usually inputs same NPK. 
+  // For now reset all except NPK if desired, but code resets form.
   document.getElementById('requestItemForm').reset();
+  
+  // Re-fetch product if needed? No need.
 
   bootstrap.Modal.getInstance(document.getElementById('requestItemModal')).hide();
 }
@@ -276,38 +312,6 @@ function addRequestItem() {
    UPDATE TABLE HTML
 ============================== */
 function updateTable() {
-  /* ==============================
-   KIRIM REQUEST ADMIN
-============================== */
-document.querySelector(".btn-primary").addEventListener("click", function () {
-
-    if (requestItems.length < 1) {
-        alert("Item request belum ditambahkan!");
-        return;
-    }
-
-    let tanggal = document.getElementById("tanggal").value;
-
-    if (!tanggal) {
-        alert("Tanggal wajib diisi!");
-        return;
-    }
-
-    // isi hidden input sebelum dikirim
-    document.getElementById("itemsInput").value = JSON.stringify(requestItems);
-    document.getElementById("npkNamaHidden").value = requestItems[0].npkNama;
-
-   
-    .then(res => res.json())
-    .then(res => {
-        if (res.success) {
-            alert("Request berhasil dibuat!");
-            window.location.href = "{{ route('requests.index') }}";
-        } else {
-            alert("Gagal menyimpan: " + res.message);
-        }
-    });
-});
   const tbody = document.getElementById('requestTableBody');
   tbody.innerHTML = "";
 
@@ -325,6 +329,8 @@ document.querySelector(".btn-primary").addEventListener("click", function () {
     `;
   });
 }
+
+// Form Submit Handler
 document.getElementById('adminRequestForm').addEventListener('submit', function(e) {
     if (requestItems.length === 0) {
         e.preventDefault();
@@ -333,6 +339,10 @@ document.getElementById('adminRequestForm').addEventListener('submit', function(
     }
 
     document.getElementById('itemsInput').value = JSON.stringify(requestItems);
+    // npkNamaHidden can be taken from first item or just handled in backend if needed
+    if(requestItems.length > 0) {
+        document.getElementById('npkNamaHidden').value = requestItems[0].npkNama;
+    }
 });
 
 </script>

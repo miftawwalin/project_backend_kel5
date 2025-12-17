@@ -9,9 +9,12 @@ class DepartmentSeeder extends Seeder
 {
     public function run(): void
     {
-        Department::create(['name' => 'Produksi']);
-        Department::create(['name' => 'Quality Control']);
-        Department::create(['name' => 'Maintenance']);
-        Department::create(['name' => 'HRD']);
+        // Department sesuai dengan data Excel (gunakan updateOrCreate untuk menghindari duplikasi)
+        Department::updateOrCreate(['name' => 'PPIC'], ['name' => 'PPIC']);
+        Department::updateOrCreate(['name' => 'QC'], ['name' => 'QC']);
+        Department::updateOrCreate(['name' => 'DIES SHOP'], ['name' => 'DIES SHOP']);
+        Department::updateOrCreate(['name' => 'PRODUCTION'], ['name' => 'PRODUCTION']);
+        Department::updateOrCreate(['name' => 'QA'], ['name' => 'QA']);
+        Department::updateOrCreate(['name' => 'Maintenance'], ['name' => 'Maintenance']);
     }
 }

@@ -59,25 +59,34 @@ class ProductRequestController extends Controller
             return back()->with('error', 'Item belum ditambahkan');
         }
 
-        // Simpan header
-        $header = ProductRequest::create([
-            'user_id' => Auth::id(),
-            'department_id' => Auth::user()->department_id,
-            'status' => 'pending',
-            'note' => 'Request oleh ' . $request->nama,
-        ]);
-
-        // Simpan semua item
-        foreach ($items as $i) {
-
-            $product = Product::where('item_code', $i['code'])->first();
-
-            ProductRequestItem::create([
-                'product_request_id' => $header->id,
-                'product_id' => $product?->id,
-                'qty' => $i['qty'],
-                'validated' => false
+        try {
+            // Simpan header
+            $header = ProductRequest::create([
+                'user_id' => Auth::id(),
+                'department_id' => Auth::user()->department_id,
+                'status' => 'pending',
+                'note' => 'Request oleh ' . $request->nama . ' (NPK: ' . $request->npk . ')',
+                'request_date' => $request->tanggal,
+                'npk_nama' => $request->npk . ' - ' . $request->nama
             ]);
+
+            // Simpan semua item
+            foreach ($items as $i) {
+                $product = Product::where('item_code', $i['code'])->first();
+                
+                // Skip if product not found, or handle error
+                if (!$product) continue;
+
+                ProductRequestItem::create([
+                    'product_request_id' => $header->id,
+                    'product_id' => $product->id,
+                    'qty' => $i['qty'],
+                    'validated' => false,
+                    // If 'note' per item is needed, add here. Item has 'npk' from JS which is actually 'catatan'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menyimpan request: ' . $e->getMessage());
         }
 
         return redirect()->back()->with('success', 'Request berhasil dikirim');

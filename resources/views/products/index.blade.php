@@ -79,28 +79,33 @@
             <table class="table table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>No</th>
-                        <th>Item Code</th>
-                        <th>Name</th>
-                        <th>Category</th>
-                        <th>Qty</th>
-                        <th>Min Stock</th>
-                        <th>Status</th>
-                        <th>Loc</th>
-                        <th>UOM</th>
-                        <th>Action</th>
+                        <th class="ps-3">ITEM CODE</th>
+                        <th>NAME</th>
+                        <th class="text-center">UOM</th>
+                        <th>LOC</th>
+                        <th class="text-center">QTY</th>
+                        <th class="text-center">Stock Max</th>
+                        <th class="text-center">Titik Order</th>
+                        <th class="text-center">Min Stock</th>
+                        <th>USER</th>
+                        <th class="text-center">STATUS</th>
+                        <th>CATEGORY</th>
+                        <th class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse($products as $product)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $product->item_code }}</td>
+                            <td class="ps-3">{{ $product->item_code }}</td>
                             <td>{{ $product->name }}</td>
-                            <td>{{ $product->category }}</td>
-                            <td>{{ $product->qty }}</td>
-                            <td>{{ $product->min_stock }}</td>
-                            <td>
+                            <td class="text-center">{{ $product->uom }}</td>
+                            <td>{{ $product->loc }}</td>
+                            <td class="text-center">{{ $product->qty }}</td>
+                            <td class="text-center">{{ $product->stock_max ?? '-' }}</td>
+                            <td class="text-center">{{ $product->titik_order ?? '-' }}</td>
+                            <td class="text-center">{{ $product->min_stock }}</td>
+                            <td>{{ $product->department?->name ?? '-' }}</td>
+                            <td class="text-center">
                                 @if($product->qty <= 0)
                                     <span class="badge bg-danger">Out</span>
                                 @elseif($product->qty < $product->min_stock)
@@ -109,29 +114,27 @@
                                     <span class="badge bg-success">OK</span>
                                 @endif
                             </td>
-                            <td>{{ $product->loc }}</td>
-                            <td>{{ $product->uom }}</td>
-                            <td>
-    <div class="d-inline-flex align-items-center" style="gap: 6px;">
-        {{-- Tombol Edit --}}
-        <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm px-3 py-1">
-            <i class="bi bi-pencil-square"></i> Edit
-        </a>
+                            <td>{{ $product->category }}</td>
+                            <td class="text-center">
+                                <div class="d-inline-flex align-items-center" style="gap: 6px;">
+                                    {{-- Tombol Edit --}}
+                                    <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning btn-sm px-3 py-1">
+                                        <i class="bi bi-pencil-square"></i> Edit
+                                    </a>
 
-        {{-- Tombol Hapus --}}
-        <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?')" class="d-inline">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger btn-sm px-3 py-1">
-                <i class="bi bi-trash"></i> Hapus
-            </button>
-        </form>
-    </div>
-</td>
-
-
+                                    {{-- Tombol Hapus --}}
+                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus produk ini?')" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm px-3 py-1">
+                                            <i class="bi bi-trash"></i> Hapus
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                     @empty
-                        <tr><td colspan="10" class="text-center text-muted">Belum ada data produk.</td></tr>
+                        <tr><td colspan="12" class="text-center text-muted">Belum ada data produk.</td></tr>
                     @endforelse
                 </tbody>
             </table>

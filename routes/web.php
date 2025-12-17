@@ -47,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
 */
     Route::middleware(['auth', 'role:admin', 'prevent-back-history'])->group(function () {
 
-    Route::get('/add-product', fn() => view('pages.add-product'))
+    Route::get('/add-product', [ProductController::class, 'create'])
         ->name('add-product');
 
     // Dashboard Admin
@@ -83,6 +83,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/export/product', [ExportController::class, 'exportProduct'])
         ->name('export.product');
 
+    Route::delete('/products/bulk-delete', [ProductController::class, 'bulkDestroy'])
+        ->name('products.bulkDestroy');
+    
+    Route::delete('/products/destroy-all', [ProductController::class, 'destroyAll'])
+        ->name('products.destroyAll');
+
     // CRUD Product
     Route::resource('products', ProductController::class);
     Route::post('/products/import', [ProductController::class, 'import'])
@@ -105,7 +111,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::get('/user-informasi', fn() => view('pages.user-informasi'))->name('user-informasi');
-Route::get('/inventory-dashboard', fn() => view('pages.inventory-dashboard'))->name('inventory-dashboard');
+Route::get('/inventory-dashboard', [ProductController::class, 'inventoryDashboard'])->middleware('auth')->name('inventory-dashboard');
 Route::get('/inventory-items', fn() => view('pages.inventory-items'))->name('inventory-items');
 Route::get('/inventory-movements', fn() => view('pages.inventory-movements'))->name('inventory-movements');
 Route::get('/inventory-reports', fn() => view('pages.inventory-reports'))->name('inventory-reports');

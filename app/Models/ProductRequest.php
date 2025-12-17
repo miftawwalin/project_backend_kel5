@@ -13,7 +13,9 @@ class ProductRequest extends Model
         'user_id',
         'department_id',
         'status',
-        'note'
+        'note',
+        'request_date',
+        'npk_nama'
     ];
 
     public function user()
