@@ -88,6 +88,12 @@
           <span class="link-title">Stock Movements</span>
         </a>
       </li>
+      <li class="nav-item {{ request()->routeIs('products.index') || request()->routeIs('products.create') || request()->routeIs('products.edit') || request()->routeIs('products.show') ? 'active' : '' }}">
+        <a href="{{ route('products.index') }}" class="nav-link {{ request()->routeIs('products.index') || request()->routeIs('products.create') || request()->routeIs('products.edit') || request()->routeIs('products.show') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="list"></i>
+          <span class="link-title">Product List</span>
+        </a>
+      </li>
       @endif
 
       {{-- SETTINGS (ADMIN ONLY) --}}
@@ -118,3 +124,144 @@
     </ul>
   </div>
 </nav>
+
+<style>
+/* ============================================
+   PROFESSIONAL & LUXURIOUS SIDEBAR STYLING
+   ============================================ */
+
+/* Active State - Mewah & Terang */
+.sidebar .nav .nav-item.active {
+    position: relative;
+    margin: 2px 0;
+}
+
+.sidebar .nav .nav-item.active > .nav-link {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.2) 0%, rgba(13, 110, 253, 0.1) 50%, rgba(13, 110, 253, 0.05) 100%);
+    border-left: 4px solid #0d6efd;
+    color: #0d6efd !important;
+    font-weight: 700;
+    box-shadow: 
+        0 4px 20px rgba(13, 110, 253, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(13, 110, 253, 0.1);
+    transform: translateX(2px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glow Effect untuk Active Link */
+.sidebar .nav .nav-item.active > .nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Icon Active State - Glow Effect */
+.sidebar .nav .nav-item.active > .nav-link i.link-icon {
+    color: #0d6efd !important;
+    filter: drop-shadow(0 0 8px rgba(13, 110, 253, 0.6));
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+}
+
+/* Text Active State */
+.sidebar .nav .nav-item.active > .nav-link .link-title {
+    color: #0d6efd !important;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(13, 110, 253, 0.2);
+}
+
+/* Hover Effect untuk Non-Active */
+.sidebar .nav .nav-item:not(.active) .nav-link:hover {
+    color: #0d6efd;
+    background: linear-gradient(90deg, rgba(13, 110, 253, 0.08) 0%, rgba(13, 110, 253, 0.02) 100%);
+    transform: translateX(3px);
+    transition: all 0.3s ease;
+}
+
+.sidebar .nav .nav-item:not(.active) .nav-link:hover i.link-icon {
+    color: #0d6efd;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+/* Category Styling */
+.sidebar .nav .nav-item.nav-category {
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6c757d;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+/* Sidebar Brand Enhancement */
+.sidebar-brand img {
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+    transition: all 0.3s ease;
+}
+
+.sidebar-brand:hover img {
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
+    transform: scale(1.02);
+}
+
+/* Smooth Transitions */
+.sidebar .nav .nav-item .nav-link {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 0 8px 8px 0;
+    margin-right: 8px;
+}
+
+/* Active Indicator Dot */
+.sidebar .nav .nav-item.active > .nav-link::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: #0d6efd;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(13, 110, 253, 0.8);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateY(-50%) scale(1.2);
+    }
+}
+
+/* Sidebar Body Enhancement */
+.sidebar-body {
+    padding: 1rem 0;
+}
+
+/* Responsive Enhancement */
+@media (max-width: 991px) {
+    .sidebar .nav .nav-item.active > .nav-link {
+        transform: none;
+    }
+}
+</style>
