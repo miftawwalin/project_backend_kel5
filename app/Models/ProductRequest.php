@@ -15,12 +15,18 @@ class ProductRequest extends Model
         'status',
         'note',
         'request_date',
-        'npk_nama'
+        'npk_nama',
+        'approved_at',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 
     // HEADER → MANY ITEMS

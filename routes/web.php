@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\InventoryMovementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,7 +114,7 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 Route::get('/user-informasi', fn() => view('pages.user-informasi'))->name('user-informasi');
 Route::get('/inventory-dashboard', [ProductController::class, 'inventoryDashboard'])->middleware('auth')->name('inventory-dashboard');
 Route::get('/inventory-items', fn() => view('pages.inventory-items'))->name('inventory-items');
-Route::get('/inventory-movements', fn() => view('pages.inventory-movements'))->name('inventory-movements');
+Route::get('/inventory-movements', [InventoryMovementController::class, 'index'])->middleware('auth')->name('inventory-movements');
 Route::get('/inventory-reports', fn() => view('pages.inventory-reports'))->name('inventory-reports');
 Route::get('/about', fn() => view('pages.about'))->name('about');
 Route::get('/contact', fn() => view('pages.contact'))->name('contact');

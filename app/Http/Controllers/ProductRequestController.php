@@ -115,7 +115,7 @@ class ProductRequestController extends Controller
 
         // Cek semua item apakah stok cukup
         foreach ($req->items as $item) {
-            if ($item->product->ending_balance_september < $item->qty) {
+            if ($item->product->qty < $item->qty) {
                 return back()->with('error', 'Stok barang ' . $item->product->name . ' tidak cukup!');
             }
         }
@@ -123,7 +123,7 @@ class ProductRequestController extends Controller
         // Kurangi stok
         foreach ($req->items as $item) {
             $p = $item->product;
-            $p->ending_balance_september -= $item->qty;
+            $p->qty -= $item->qty;
             $p->save();
         }
 
