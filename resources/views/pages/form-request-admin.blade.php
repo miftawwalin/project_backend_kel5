@@ -15,7 +15,7 @@
   <form id="adminRequestForm" action="{{ route('admin.store-request') }}"
  method="POST">
 @csrf
-<input type="hidden" name="items" id="itemsInput">
+
 
   <!-- Company Header -->
   <div class="row mb-4">
