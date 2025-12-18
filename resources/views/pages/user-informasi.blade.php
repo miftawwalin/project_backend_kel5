@@ -194,7 +194,7 @@
                   <td class="text-center">
                     <div class="btn-group" role="group">
                       <button type="button" class="btn btn-sm btn-outline-primary" 
-                              onclick="editUser({{ $user->id }}, '{{ $user->name }}', '{{ $user->email }}', '{{ $user->role }}', {{ $user->department_id ?? 'null' }})"
+                              onclick="editUser({{ $user->id }}, '{{ addslashes($user->name) }}', '{{ $user->email }}', '{{ $user->role }}', '{{ addslashes($user->department->name ?? '') }}')"
                               title="Edit">
                         <i data-feather="edit" style="width: 14px; height: 14px;"></i>
                       </button>
@@ -298,14 +298,13 @@
               </div>
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Department</label>
-                <select class="form-select" name="department_id">
-                  <option value="">Select Department</option>
-                  @foreach(\App\Models\Department::all() as $dept)
-                    <option value="{{ $dept->id }}" {{ old('department_id') == $dept->id ? 'selected' : '' }}>
-                      {{ $dept->name }}
-                    </option>
-                  @endforeach
-                </select>
+                <input type="text" class="form-control @error('department') is-invalid @enderror" 
+                       name="department" value="{{ old('department') }}" 
+                       placeholder="Masukkan nama department (contoh: Produksi, IT, HRD)">
+                @error('department')
+                  <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+                <small class="text-muted">Tulis nama department secara manual</small>
               </div>
             </div>
             <div class="d-flex justify-content-end gap-2">
@@ -400,12 +399,9 @@
           </div>
           <div class="mb-3">
             <label class="form-label fw-bold">Department</label>
-            <select class="form-select" name="department_id" id="editDepartment">
-              <option value="">Select Department</option>
-              @foreach(\App\Models\Department::all() as $dept)
-                <option value="{{ $dept->id }}">{{ $dept->name }}</option>
-              @endforeach
-            </select>
+            <input type="text" class="form-control" name="department" id="editDepartment" 
+                   placeholder="Masukkan nama department (contoh: Produksi, IT, HRD)">
+            <small class="text-muted">Tulis nama department secara manual</small>
           </div>
         </div>
         <div class="modal-footer">
@@ -486,12 +482,12 @@ function togglePassword(inputId, iconId) {
   }
 }
 
-function editUser(id, name, email, role, departmentId) {
+function editUser(id, name, email, role, departmentName) {
   document.getElementById('editUserForm').action = '{{ route("users.update", ":id") }}'.replace(':id', id);
   document.getElementById('editName').value = name;
   document.getElementById('editEmail').value = email;
   document.getElementById('editRole').value = role;
-  document.getElementById('editDepartment').value = departmentId || '';
+  document.getElementById('editDepartment').value = departmentName || '';
   
   const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
   modal.show();

@@ -61,11 +61,20 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|in:admin,user',
-            'department_id' => 'nullable|exists:departments,id',
+            'department' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
+        }
+
+        // Cari atau buat department berdasarkan nama
+        $departmentId = null;
+        if ($request->filled('department')) {
+            $department = Department::firstOrCreate(
+                ['name' => trim($request->department)]
+            );
+            $departmentId = $department->id;
         }
 
         $user = User::create([
@@ -73,7 +82,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'department_id' => $request->department_id,
+            'department_id' => $departmentId,
         ]);
 
         return redirect()->route('user-informasi')
@@ -91,18 +100,27 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'role' => 'required|in:admin,user',
-            'department_id' => 'nullable|exists:departments,id',
+            'department' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
+        // Cari atau buat department berdasarkan nama
+        $departmentId = null;
+        if ($request->filled('department')) {
+            $department = Department::firstOrCreate(
+                ['name' => trim($request->department)]
+            );
+            $departmentId = $department->id;
+        }
+
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
-            'department_id' => $request->department_id,
+            'department_id' => $departmentId,
         ]);
 
         return redirect()->route('user-informasi')

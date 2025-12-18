@@ -43,7 +43,7 @@ public function stockInfo(Request $request)
 
     // ➕ Halaman tambah produk
     public function create(Request $request)
-    {
+{
         // Fetch products for the list table, similar to index
         $query = Product::with('department');
 
@@ -56,25 +56,25 @@ public function stockInfo(Request $request)
         
         $products = $query->orderBy('item_code')->paginate(10);
 
-        // Jika database belum lengkap, isi manual seperti di filter
-        $departments = collect([
-            (object)['id' => 1, 'name' => 'PPIC'],
-            (object)['id' => 2, 'name' => 'QC'],
-            (object)['id' => 3, 'name' => 'DIES SHOP'],
-            (object)['id' => 4, 'name' => 'PRODUCTION'],
-            (object)['id' => 5, 'name' => 'QA'],
-            (object)['id' => 6, 'name' => 'Maintenance'],
-        ]);
+    // Jika database belum lengkap, isi manual seperti di filter
+    $departments = collect([
+        (object)['id' => 1, 'name' => 'PPIC'],
+        (object)['id' => 2, 'name' => 'QC'],
+        (object)['id' => 3, 'name' => 'DIES SHOP'],
+        (object)['id' => 4, 'name' => 'PRODUCTION'],
+        (object)['id' => 5, 'name' => 'QA'],
+        (object)['id' => 6, 'name' => 'Maintenance'],
+    ]);
 
-        $categories = collect(['Sparepart', 'Elektrikal', 'Material', 'Consumable']);
+    $categories = collect(['Sparepart', 'Elektrikal', 'Material', 'Consumable']);
 
-        $locs = collect([
-            'D-5-1(A.1)', 'OIL AREA', 'D-1-4 (E.2)', 'E-2-4 (C.1)',
-        ]);
+    $locs = collect([
+        'D-5-1(A.1)', 'OIL AREA', 'D-1-4 (E.2)', 'E-2-4 (C.1)',
+    ]);
 
-        $uoms = collect([
-            'Pcs', 'Ltr', 'CAN', 'DRUM', 'GALON', 'Pail', 'BTL',
-        ]);
+    $uoms = collect([
+        'Pcs', 'Ltr', 'CAN', 'DRUM', 'GALON', 'Pail', 'BTL',
+    ]);
 
         return view('pages.add-product', compact('departments', 'categories', 'locs', 'uoms', 'products'));
     }
@@ -87,7 +87,7 @@ public function stockInfo(Request $request)
         Schema::enableForeignKeyConstraints();
         
         return redirect()->back()->with('success', 'Semua data produk berhasil dihapus (Truncate).');
-    }
+}
 
 
     // 💾 Simpan produk baru
@@ -177,7 +177,7 @@ public function stockInfo(Request $request)
         $file = $request->file('file');
         
         try {
-            $spreadsheet = IOFactory::load($file->getRealPath());
+        $spreadsheet = IOFactory::load($file->getRealPath());
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['file' => 'Error loading file: ' . $e->getMessage()]);
         }
@@ -343,7 +343,7 @@ public function stockInfo(Request $request)
             'totalGI',
             'totalBalance'
         ));
-    }
+        }
 
     /**
      * Stock Minim - Item yang mencapai titik order

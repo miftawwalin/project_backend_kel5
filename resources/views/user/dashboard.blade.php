@@ -116,22 +116,22 @@
                     <h6 class="fw-bold mb-0 text-dark">
                         <i data-feather="clock" class="me-2"></i>Recent Requests
                     </h6>
-                </div>
-                <div class="card-body p-0">
+        </div>
+        <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
                                     <th class="ps-4" style="width: 50px;">#</th>
                                     <th>Items</th>
                                     <th class="text-center" style="width: 100px;">Qty</th>
                                     <th class="text-center" style="width: 120px;">Status</th>
                                     <th class="text-end pe-4" style="width: 150px;">Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($requests as $index => $req)
-                                <tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($requests as $index => $req)
+                    <tr>
                                     <td class="ps-4 text-muted">{{ $index + 1 }}</td>
                                     <td>
                                         @if($req->items->count() > 0)
@@ -151,32 +151,32 @@
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        @if($req->status === 'pending')
+                            @if($req->status === 'pending')
                                             <span class="badge bg-warning-subtle text-warning border border-warning">Pending</span>
-                                        @elseif($req->status === 'approved')
+                            @elseif($req->status === 'approved')
                                             <span class="badge bg-success-subtle text-success border border-success">Approved</span>
-                                        @else
+                            @else
                                             <span class="badge bg-danger-subtle text-danger border border-danger">Rejected</span>
-                                        @endif
-                                    </td>
+                            @endif
+                        </td>
                                     <td class="text-end pe-4 text-muted small">
                                         {{ $req->created_at->format('d M Y') }}<br>
                                         <small>{{ $req->created_at->format('H:i') }}</small>
                                     </td>
-                                </tr>
-                                @empty
-                                <tr>
+                    </tr>
+                    @empty
+                    <tr>
                                     <td colspan="5" class="text-center py-5 text-muted">
                                         <i data-feather="inbox" style="width: 48px; height: 48px; opacity: 0.3;"></i>
                                         <p class="mt-2 mb-0">No requests yet. Create your first request!</p>
-                                    </td>
-                                </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
         </div>
     </div>
 </div>
