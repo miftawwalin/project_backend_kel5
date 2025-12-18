@@ -461,7 +461,7 @@ class ProductRequestController extends Controller
             return back()->with('error', 'Tidak ada item yang dipilih');
         }
 
-        $productRequests = ProductRequest::whereIn('id', $ids)->get();
+        $productRequests = ProductRequest::with('items.product')->whereIn('id', $ids)->get();
         
         DB::transaction(function () use ($productRequests) {
             foreach ($productRequests as $productRequest) {

@@ -88,6 +88,13 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/requests/{id}/reject', [ProductRequestController::class, 'reject'])
         ->name('requests.reject');
 
+    // Bulk Delete & Delete All (must be before routes with {id} parameter)
+    Route::delete('/requests/bulk-delete', [ProductRequestController::class, 'bulkDestroy'])
+        ->name('requests.bulkDestroy');
+    
+    Route::delete('/requests/destroy-all', [ProductRequestController::class, 'destroyAll'])
+        ->name('requests.destroyAll');
+    
     // Edit & Delete Requests
     Route::get('/requests/{id}/edit', [ProductRequestController::class, 'edit'])
         ->name('requests.edit');
@@ -97,12 +104,6 @@ Route::middleware(['auth'])->group(function () {
     
     Route::delete('/requests/{id}', [ProductRequestController::class, 'destroy'])
         ->name('requests.destroy');
-    
-    Route::delete('/requests/bulk-delete', [ProductRequestController::class, 'bulkDestroy'])
-        ->name('requests.bulkDestroy');
-    
-    Route::delete('/requests/destroy-all', [ProductRequestController::class, 'destroyAll'])
-        ->name('requests.destroyAll');
 
     // Export
     Route::get('/export/request', [ExportController::class, 'exportRequest'])
