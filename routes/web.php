@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductRequestController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\InventoryMovementController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,7 +112,13 @@ Route::middleware(['auth', 'role:user'])->group(function () {
 | Static Pages
 |--------------------------------------------------------------------------
 */
-Route::get('/user-informasi', fn() => view('pages.user-informasi'))->name('user-informasi');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/user-informasi', [UserController::class, 'index'])->name('user-informasi');
+    Route::post('/user-informasi', [UserController::class, 'store'])->name('users.store');
+    Route::put('/user-informasi/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::post('/user-informasi/{id}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
+    Route::delete('/user-informasi/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+});
 Route::get('/inventory-dashboard', [ProductController::class, 'inventoryDashboard'])->middleware('auth')->name('inventory-dashboard');
 Route::get('/inventory-items', fn() => view('pages.inventory-items'))->name('inventory-items');
 Route::get('/inventory-movements', [InventoryMovementController::class, 'index'])->middleware('auth')->name('inventory-movements');

@@ -159,11 +159,19 @@
           <label class="fw-bold mt-2">LOC</label>
           <input type="text" id="loc" class="form-control" readonly>
 
+          <div class="mb-2">
+            <label class="fw-bold mt-2">Stock Tersedia</label>
+            <div class="alert alert-info mb-2 py-2" id="stockInfo" style="display: none;">
+              <i data-feather="package"></i> <strong>Stock:</strong> <span id="stockDisplay">0</span>
+            </div>
+          </div>
+
           <label class="fw-bold mt-2">QTY *</label>
           <input type="number" id="qty" min="1" class="form-control" required>
-
-          <label class="fw-bold mt-2">UOM</label>
-          <input type="text" id="uom" class="form-control" readonly>
+          <div class="invalid-feedback" id="qtyError" style="display: none;">
+            Qty tidak boleh melebihi stock yang tersedia!
+          </div>
+          <input type="hidden" id="maxStock" value="0">
 
           <label class="fw-bold mt-2">NPK / Nama *</label>
           <input type="text" id="npkNama" class="form-control" required>
@@ -185,9 +193,41 @@
 <script src="https://unpkg.com/html5-qrcode"></script>
 
 <script>
+// Initialize feather icons on page load
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
+  
+  // Reset form saat modal ditutup atau dibuka
+  const requestItemModal = document.getElementById('requestItemModal');
+  if (requestItemModal) {
+    requestItemModal.addEventListener('hidden.bs.modal', function() {
+      document.getElementById('requestItemForm').reset();
+      document.getElementById("stockInfo").style.display = 'none';
+      document.getElementById("maxStock").value = 0;
+      currentStock = 0;
+      document.getElementById('qty').classList.remove('is-invalid');
+      document.getElementById('qtyError').style.display = 'none';
+      document.getElementById('qty').removeAttribute('max');
+    });
+    
+    requestItemModal.addEventListener('show.bs.modal', function() {
+      // Reset form saat modal dibuka
+      document.getElementById('requestItemForm').reset();
+      document.getElementById("stockInfo").style.display = 'none';
+      document.getElementById("maxStock").value = 0;
+      currentStock = 0;
+      document.getElementById('qty').classList.remove('is-invalid');
+      document.getElementById('qtyError').style.display = 'none';
+      document.getElementById('qty').removeAttribute('max');
+    });
+  }
+});
 
 let requestItems = [];
 let html5Qr;
+let currentStock = 0; // Menyimpan stock saat ini
 
 function addRowWarning() {
   alert("Gunakan tombol REQUEST ITEM untuk menambah item.");
@@ -260,16 +300,54 @@ function fetchProduct(code) {
     .then(res => {
       if (!res.status) {
         alert("Item tidak ditemukan!");
+        // Reset form jika item tidak ditemukan
+        document.getElementById("namaBarang").value = '';
+        document.getElementById("loc").value = '';
+        document.getElementById("uom").value = '';
+        document.getElementById("stockInfo").style.display = 'none';
+        document.getElementById("maxStock").value = 0;
+        currentStock = 0;
         return;
       }
 
       let p = res.data;
 
       document.getElementById("namaBarang").value = p.name;
-      document.getElementById("loc").value = p.loc;
-      document.getElementById("uom").value = p.uom;
+      document.getElementById("loc").value = p.loc || '';
+      document.getElementById("uom").value = p.uom || '';
+      
+      // Set stock (gunakan qty dari database)
+      currentStock = parseInt(p.qty) || 0;
+      document.getElementById("maxStock").value = currentStock;
+      
+      // Tampilkan stock info
+      const stockInfo = document.getElementById("stockInfo");
+      const stockDisplay = document.getElementById("stockDisplay");
+      stockDisplay.textContent = currentStock.toLocaleString('id-ID');
+      stockInfo.style.display = 'block';
+      
+      // Update class alert berdasarkan stock
+      if (currentStock <= 0) {
+        stockInfo.className = 'alert alert-danger mb-2 py-2';
+        stockDisplay.textContent = '0 (OUT OF STOCK)';
+      } else if (currentStock < (p.min_stock || 0)) {
+        stockInfo.className = 'alert alert-warning mb-2 py-2';
+      } else {
+        stockInfo.className = 'alert alert-info mb-2 py-2';
+      }
+      
+      // Reset qty dan validasi
+      document.getElementById("qty").value = '';
+      document.getElementById("qty").classList.remove('is-invalid');
+      document.getElementById("qtyError").style.display = 'none';
+      
+      // Set max attribute pada input qty
+      document.getElementById("qty").setAttribute('max', currentStock);
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+      console.error(err);
+      alert("Terjadi kesalahan saat mengambil data produk!");
+    });
 }
 
 document.getElementById("itemCode").addEventListener("change", function(){
@@ -277,20 +355,68 @@ document.getElementById("itemCode").addEventListener("change", function(){
   if (code.length >= 3) fetchProduct(code);
 });
 
+// Validasi QTY real-time
+document.getElementById("qty").addEventListener("input", function(){
+  const qty = parseInt(this.value) || 0;
+  const maxStock = parseInt(document.getElementById("maxStock").value) || 0;
+  const qtyInput = this;
+  const qtyError = document.getElementById("qtyError");
+  
+  if (qty > maxStock && maxStock > 0) {
+    qtyInput.classList.add('is-invalid');
+    qtyError.style.display = 'block';
+    qtyError.textContent = `Qty tidak boleh melebihi stock yang tersedia! Stock tersedia: ${maxStock.toLocaleString('id-ID')}`;
+  } else if (qty <= 0) {
+    qtyInput.classList.add('is-invalid');
+    qtyError.style.display = 'block';
+    qtyError.textContent = 'Qty harus lebih dari 0!';
+  } else {
+    qtyInput.classList.remove('is-invalid');
+    qtyError.style.display = 'none';
+  }
+});
+
 /* ==============================
    TAMBAH ITEM KE TABLE
 ============================== */
 function addRequestItem() {
-  const itemCode = document.getElementById('itemCode').value;
+  const itemCode = document.getElementById('itemCode').value.trim();
   const namaBarang = document.getElementById('namaBarang').value;
   const loc = document.getElementById('loc').value;
-  const qty = document.getElementById('qty').value;
+  const qty = parseInt(document.getElementById('qty').value) || 0;
   const uom = document.getElementById('uom').value;
-  const npkNama = document.getElementById('npkNama').value;
+  const npkNama = document.getElementById('npkNama').value.trim();
+  const maxStock = parseInt(document.getElementById("maxStock").value) || 0;
 
+  // Validasi wajib
   if (!itemCode || !qty || !npkNama) {
     alert("Item Code, Qty, dan NPK wajib diisi!");
     return;
+  }
+
+  // Validasi qty harus lebih dari 0
+  if (qty <= 0) {
+    alert("Qty harus lebih dari 0!");
+    document.getElementById('qty').focus();
+    return;
+  }
+
+  // Validasi qty tidak boleh melebihi stock
+  if (qty > maxStock) {
+    alert(`Qty tidak boleh melebihi stock yang tersedia!\nStock tersedia: ${maxStock.toLocaleString('id-ID')}\nQty yang diminta: ${qty.toLocaleString('id-ID')}`);
+    document.getElementById('qty').focus();
+    document.getElementById('qty').classList.add('is-invalid');
+    return;
+  }
+
+  // Cek apakah item code sudah ada di requestItems (duplikasi)
+  const existingItem = requestItems.find(item => item.itemCode === itemCode);
+  if (existingItem) {
+    if (!confirm(`Item ${itemCode} sudah ada dalam daftar. Apakah Anda ingin menggantinya?`)) {
+      return;
+    }
+    // Hapus item lama
+    requestItems = requestItems.filter(item => item.itemCode !== itemCode);
   }
 
   requestItems.push({
@@ -299,11 +425,18 @@ function addRequestItem() {
 
   updateTable();
 
-  // Reset Input but keep NPK/Nama maybe? User usually inputs same NPK. 
-  // For now reset all except NPK if desired, but code resets form.
+  // Reset form
   document.getElementById('requestItemForm').reset();
+  document.getElementById("stockInfo").style.display = 'none';
+  document.getElementById("maxStock").value = 0;
+  currentStock = 0;
+  document.getElementById('qty').classList.remove('is-invalid');
+  document.getElementById('qtyError').style.display = 'none';
   
-  // Re-fetch product if needed? No need.
+  // Re-initialize feather icons
+  if (typeof feather !== 'undefined') {
+    feather.replace();
+  }
 
   bootstrap.Modal.getInstance(document.getElementById('requestItemModal')).hide();
 }
@@ -353,6 +486,29 @@ document.getElementById('adminRequestForm').addEventListener('submit', function(
 .table tbody tr:hover { background:#f8f9fa; }
 .modal-content { border-radius:8px; }
 .btn-warning { font-weight:bold; }
+
+#stockInfo {
+  font-size: 0.9rem;
+}
+
+#stockInfo i {
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+}
+
+#qtyError {
+  font-size: 0.875rem;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath d='m5.8 3.6 .4.4.4-.4m0 4.8-.4-.4-.4.4'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
 </style>
 
 @endsection
