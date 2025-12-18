@@ -24,9 +24,6 @@
             <i data-feather="trash-2"></i> Delete Selected (<span id="selectedCount">0</span>)
           </button>
 
-          <button class="btn btn-outline-primary btn-sm" onclick="exportToExcel()">
-            <i data-feather="download"></i> Export Excel
-          </button>
           <a href="{{ route('products.create') }}" class="btn btn-primary btn-sm">
             <i data-feather="plus"></i> Tambah Produk
           </a>
