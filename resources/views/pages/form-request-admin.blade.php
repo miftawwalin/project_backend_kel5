@@ -35,7 +35,7 @@
 
         <div>
           <button type="button" class="btn btn-warning fw-bold px-4 py-2" data-bs-toggle="modal" data-bs-target="#produksiModal" id="produksiButton">
-            PRODUKSI - 4500 TAP
+            Scan Barcode
           </button>
         </div>
       </div>
@@ -99,6 +99,7 @@
                   <th class="text-center fw-bold">QTY</th>
                   <th class="text-center fw-bold">UOM</th>
                   <th class="text-center fw-bold">NPK / NAMA</th>
+                  <th class="text-center fw-bold">NOTE</th>
                 </tr>
               </thead>
               <tbody id="requestTableBody"></tbody>
@@ -115,7 +116,7 @@
 </div>
 
 <!-- MODAL PRODUKSI -->
-<div class="modal fade" id="produksiModal">
+<!-- <div class="modal fade" id="produksiModal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header"><h5>Pilih PRODUKSI</h5></div>
@@ -128,7 +129,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- MODAL REQUEST ITEM -->
 <div class="modal fade" id="requestItemModal">
@@ -208,6 +209,9 @@
 
           <label class="fw-bold mt-2">NPK / Nama *</label>
           <input type="text" id="npkNama" class="form-control" required>
+
+          <label class="fw-bold mt-2">Note</label>
+          <textarea id="noteInput" class="form-control" rows="2" placeholder="Masukkan catatan untuk item ini (opsional)"></textarea>
         </form>
 
       </div>
@@ -257,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById("loc").value = '';
       document.getElementById("description").value = '';
       document.getElementById("department").value = '';
+      document.getElementById("noteInput").value = '';
       document.getElementById("stockInfo").style.display = 'none';
       document.getElementById("stockHint").style.display = 'none';
       document.getElementById("stockBadge").style.display = 'none';
@@ -279,6 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById("loc").value = '';
       document.getElementById("description").value = '';
       document.getElementById("department").value = '';
+      document.getElementById("noteInput").value = '';
       document.getElementById("stockInfo").style.display = 'none';
       document.getElementById("stockHint").style.display = 'none';
       document.getElementById("stockBadge").style.display = 'none';
@@ -588,6 +594,7 @@ function addRequestItem() {
   const qty = parseInt(document.getElementById('qty').value) || 0;
   const uom = document.getElementById('uom').value;
   const npkNama = document.getElementById('npkNama').value.trim();
+  const note = document.getElementById('noteInput').value.trim();
   const maxStock = parseInt(document.getElementById("maxStock").value) || 0;
 
   // Validasi wajib
@@ -634,7 +641,7 @@ function addRequestItem() {
   }
 
   requestItems.push({
-    itemCode, namaBarang, loc, qty, uom, npkNama
+    itemCode, namaBarang, loc, qty, uom, npkNama, note
   });
 
   updateTable();
@@ -672,6 +679,7 @@ function updateTable() {
         <td>${item.qty}</td>
         <td>${item.uom}</td>
         <td>${item.npkNama}</td>
+        <td>${item.note || '-'}</td>
       </tr>
     `;
   });

@@ -44,6 +44,25 @@ Route::middleware(['auth'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
+| Scan Barcode (Admin & User)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth'])->group(function () {
+    // Form request dengan scan barcode (bisa diakses admin dan user)
+    Route::get('/admin/form-request', [ProductRequestController::class, 'adminForm'])
+        ->name('admin.form-request');
+
+    // Scan product (AJAX)
+    Route::get('/admin/get-product/{code}', [ProductRequestController::class, 'getProduct'])
+        ->name('admin.get-product');
+
+    // Simpan request
+    Route::post('/admin/store-request', [ProductRequestController::class, 'storeByAdmin'])
+        ->name('admin.store-request');
+});
+
+/*
+|--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
 */
@@ -55,18 +74,6 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard Admin
     Route::get('/admin/dashboard', [ProductRequestController::class, 'adminDashboard'])
         ->name('admin.dashboard');
-
-    // Form request admin
-    Route::get('/admin/form-request', [ProductRequestController::class, 'adminForm'])
-        ->name('admin.form-request');
-
-    // Scan product (AJAX)
-    Route::get('/admin/get-product/{code}', [ProductRequestController::class, 'getProduct'])
-        ->name('admin.get-product');
-
-    // Simpan request admin
-    Route::post('/admin/store-request', [ProductRequestController::class, 'storeByAdmin'])
-        ->name('admin.store-request');
 
     // List request pending/approved/rejected
     Route::get('/requests/admin', [ProductRequestController::class, 'index'])
@@ -91,8 +98,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/products/destroy-all', [ProductController::class, 'destroyAll'])
         ->name('products.destroyAll');
 
-    // CRUD Product
-    Route::resource('products', ProductController::class);
+    // CRUD Product (tanpa index, karena sudah ada inventory-dashboard)
+    Route::resource('products', ProductController::class)->except(['index']);
     Route::post('/products/import', [ProductController::class, 'import'])
         ->name('products.import');
 });

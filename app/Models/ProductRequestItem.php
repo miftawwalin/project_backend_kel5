@@ -14,7 +14,8 @@ class ProductRequestItem extends Model
         'product_id',
         'qty',
         'validated',
-        'npk'
+        'npk',
+        'note'
     ];
 
     public function request()

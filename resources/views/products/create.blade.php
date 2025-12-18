@@ -8,7 +8,7 @@
   {{-- Judul Halaman --}}
   <div class="mb-4 border-bottom pb-2 d-flex justify-content-between align-items-center">
       <h3 class="fw-bold text-primary mb-0">Tambah Produk Baru</h3>
-      <a href="{{ route('products.index') }}" class="btn btn-outline-secondary">
+      <a href="{{ route('inventory-dashboard') }}" class="btn btn-outline-secondary">
           <i class="bi bi-arrow-left"></i> Kembali
       </a>
   </div>
@@ -107,7 +107,7 @@
       </div>
 
       <div class="d-flex justify-content-end gap-2">
-          <a href="{{ route('products.index') }}" class="btn btn-secondary">Kembali</a>
+          <a href="{{ route('inventory-dashboard') }}" class="btn btn-secondary">Kembali</a>
           <button type="submit" class="btn btn-primary">Simpan Produk</button>
       </div>
   </form>
@@ -117,7 +117,7 @@
           <button type="submit" class="btn btn-primary px-4">
               <i class="bi bi-save"></i> Simpan Produk
           </button>
-          <a href="{{ route('products.index') }}" class="btn btn-outline-secondary px-4">
+          <a href="{{ route('inventory-dashboard') }}" class="btn btn-outline-secondary px-4">
               <i class="bi bi-x-circle"></i> Batal
           </a>
         </div>

@@ -119,9 +119,9 @@
       </h6>
     </div>
     <div class="card-body p-0">
-      <div class="table-responsive">
+      <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
         <table class="table table-hover align-middle mb-0" id="inventoryTable">
-          <thead class="table-light">
+          <thead class="table-light" style="position: sticky; top: 0; z-index: 10; background-color: #f8f9fa;">
             <tr>
               <th class="text-center" style="width: 40px;">
                   <div class="form-check d-flex justify-content-center mb-0">
@@ -201,18 +201,13 @@
         </table>
       </div>
     </div>
-    @if($products->hasPages())
     <div class="card-footer bg-white py-2">
       <div class="d-flex justify-content-between align-items-center">
         <div class="text-muted small">
-          Showing {{ $products->firstItem() ?? 0 }} to {{ $products->lastItem() ?? 0 }} of {{ $products->total() }} items
-        </div>
-        <div>
-          {{ $products->links() }}
+          <span id="filterInfo">Menampilkan semua <strong>{{ count($products) }}</strong> item</span>
         </div>
       </div>
     </div>
-    @endif
   </div>
 </div>
 
@@ -266,6 +261,36 @@ code {
 .pagination .page-link {
   font-size: 0.875rem;
   padding: 0.375rem 0.75rem;
+}
+
+/* Table Scroll Styling */
+.table-responsive {
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+}
+
+.table-responsive::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Sticky header styling */
+thead.table-light {
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
 }
 </style>
 

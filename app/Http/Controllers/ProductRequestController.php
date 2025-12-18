@@ -15,7 +15,7 @@ class ProductRequestController extends Controller
      */
     public function create()
     {
-        $products = Product::all();
+        $products = Product::with('department')->get();
 
         $requests = ProductRequest::with(['items.product'])
             ->where('user_id', Auth::id())
@@ -27,15 +27,23 @@ class ProductRequestController extends Controller
 
 
     /**
-     * FORM REQUEST ADMIN
+     * FORM REQUEST ADMIN (Bisa diakses Admin & User)
      */
     public function adminForm()
     {
         $products = Product::all();
 
-        $requests = ProductRequest::with(['items.product', 'user'])
-            ->latest()
-            ->get();
+        // Jika admin, tampilkan semua request. Jika user, hanya request miliknya
+        if (Auth::user()->role === 'admin') {
+            $requests = ProductRequest::with(['items.product', 'user'])
+                ->latest()
+                ->get();
+        } else {
+            $requests = ProductRequest::with(['items.product', 'user'])
+                ->where('user_id', Auth::id())
+                ->latest()
+                ->get();
+        }
 
         return view('pages.form-request-admin', compact('products', 'requests'));
     }
@@ -82,7 +90,7 @@ class ProductRequestController extends Controller
                     'product_id' => $product->id,
                     'qty' => $i['qty'],
                     'validated' => false,
-                    // If 'note' per item is needed, add here. Item has 'npk' from JS which is actually 'catatan'
+                    'note' => $i['note'] ?? null
                 ]);
             }
         } catch (\Exception $e) {
@@ -221,41 +229,28 @@ class ProductRequestController extends Controller
     }
 
     /**
- * GET PRODUCT berdasarkan ITEM CODE (SCAN)
- */
-public function getProduct($code)
-{
-    // Load product dengan relasi department untuk mendapatkan nama department
-    $product = Product::with('department')->where('item_code', $code)->first();
+     * GET PRODUCT berdasarkan ITEM CODE (SCAN)
+     */
+    public function getProduct($code)
+    {
+        $product = Product::with('department')->where('item_code', $code)->first();
 
-    if (!$product) {
+        if (!$product) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Item tidak ditemukan'
+            ]);
+        }
+
+        // Tambahkan department_name ke response
+        $productData = $product->toArray();
+        $productData['department_name'] = $product->department ? $product->department->name : '-';
+
         return response()->json([
-            'status' => false,
-            'message' => 'Item tidak ditemukan'
+            'status' => true,
+            'data' => $productData
         ]);
     }
-
-    // Return semua data product termasuk relasi department
-    return response()->json([
-        'status' => true,
-        'data' => [
-            'id' => $product->id,
-            'item_code' => $product->item_code,
-            'name' => $product->name,
-            'description' => $product->description,
-            'category' => $product->category,
-            'qty' => $product->qty,
-            'stock' => $product->stock,
-            'min_stock' => $product->min_stock,
-            'stock_max' => $product->stock_max,
-            'titik_order' => $product->titik_order,
-            'uom' => $product->uom,
-            'loc' => $product->loc,
-            'department_id' => $product->department_id,
-            'department_name' => $product->department ? $product->department->name : null,
-        ]
-    ]);
-}
 
 
     // SIMPAN REQUEST ADMIN via SCAN
@@ -294,7 +289,8 @@ public function getProduct($code)
                     'product_request_id' => $header->id,
                     'product_id' => $product?->id,
                     'qty' => $i['qty'],
-                    'validated' => false
+                    'validated' => false,
+                    'note' => $i['note'] ?? null
                 ]);
             }
 

@@ -11,107 +11,30 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    // 🧭 Halaman utama stok (informasi & CRUD untuk admin)
-    public function index(Request $request)
-    {
-        $query = Product::query();
-
-        if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->search . '%')
-                    ->orWhere('item_code', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        if ($request->filled('uom') && $request->uom !== 'all') {
-            $query->where('uom', $request->uom);
-        }
-
-        if ($request->filled('loc') && $request->loc !== 'all') {
-            $query->where('loc', $request->loc);
-        }
-
-        if ($request->filled('department') && $request->department !== 'all') {
-            $query->where('department_id', $request->department);
-        }
-
-        $products = $query->paginate(10);
-        $uoms = Product::select('uom')->distinct()->pluck('uom');
-        $locs = Product::select('loc')->distinct()->pluck('loc');
-        $departments = Department::orderBy('name')->get();
-        $categories = Product::select('category')->distinct()->pluck('category');
-
-        $totalItems = Product::count();
-        $lowStock = Product::whereColumn('qty', '<', 'min_stock')->count();
-        $outStock = Product::where('qty', '<=', 0)->count();
-
-        return view('products.index', compact(
-            'products', 'uoms', 'locs', 'departments', 'categories',
-            'totalItems', 'lowStock', 'outStock'
-        ));
-    }
 
     // ✅ Halaman informasi stok (bisa diakses user)
 public function stockInfo(Request $request)
 {
-    $today = now()->toDateString();
-
-    // Query produk + relasi departemen
+    // Query produk + relasi departemen - ambil semua data tanpa pagination
     $query = Product::with('department');
 
-    // Filter pencarian
-    if ($request->filled('keyword')) {
-        $query->where(function ($q) use ($request) {
-            $q->where('item_code', 'like', '%' . $request->keyword . '%')
-              ->orWhere('name', 'like', '%' . $request->keyword . '%');
-        });
+    // Filter pencarian hanya berdasarkan name (opsional, karena filter client-side)
+    if ($request->filled('search')) {
+        $query->where('name', 'like', '%' . $request->search . '%');
     }
 
-    if ($request->filled('category') && $request->category !== 'all') {
-        $query->where('category', $request->category);
-    }
-
-    if ($request->filled('uom') && $request->uom !== 'all') {
-        $query->where('uom', $request->uom);
-    }
-
-    if ($request->filled('loc') && $request->loc !== 'all') {
-        $query->where('loc', $request->loc);
-    }
-
-    if ($request->filled('department') && $request->department !== 'all') {
-        $query->where('department_id', $request->department);
-    }
-
-    // Ambil data produk
-    $products = $query->orderBy('item_code')->paginate(10);
-
-    // Filter dropdown
-    $uoms = Product::select('uom')->whereNotNull('uom')->distinct()->pluck('uom');
-    $locs = Product::select('loc')->whereNotNull('loc')->distinct()->pluck('loc');
-    $departments = Department::orderBy('name')->get();
+    // Ambil semua data produk tanpa pagination
+    $products = $query->orderBy('item_code')->get();
 
     // Statistik ringkas
     $totalItems = Product::count();
     $lowStock = Product::whereColumn('qty', '<', 'min_stock')->count();
     $outStock = Product::where('qty', '<=', 0)->count();
 
-    // === Perhitungan GR / GI harian (tanpa kolom 'type') ===
-    // Untuk sementara GR dan GI sama-sama dihitung dari request yang disetujui hari ini
-    $totalItems = Product::count();
-$lowStock = Product::whereColumn('qty', '<', 'min_stock')->count();
-$outStock = Product::where('qty', '<=', 0)->count();
-
-// === Perhitungan GR / GI harian — DISABLE sementara ===
-$totalGR = 0;
-$totalGI = 0;
-
-$totalEnding = Product::sum('qty');
     // Kirim ke view
     return view('pages.stock-information', compact(
-        'products', 'uoms', 'locs', 'departments',
-        'totalItems', 'lowStock', 'outStock',
-        'totalGR', 'totalGI', 'totalEnding'
+        'products',
+        'totalItems', 'lowStock', 'outStock'
     ));
 }
 
@@ -352,12 +275,8 @@ $totalEnding = Product::sum('qty');
 
         $message = "Import berhasil! {$imported} item baru ditambahkan, {$updated} item diperbarui.";
 
-        // Redirect logic
-        $redirectTo = $request->get('redirect_to', 'inventory-dashboard');
-        if ($redirectTo === 'inventory-dashboard') {
-            return redirect()->route('inventory-dashboard')->with('success', $message);
-        }
-        return redirect()->route('products.index')->with('success', $message);
+        // Redirect logic - selalu redirect ke inventory-dashboard
+        return redirect()->route('inventory-dashboard')->with('success', $message);
     }
 
     // 📊 Inventory Dashboard - Menggunakan database products yang sama dengan /products
@@ -394,8 +313,8 @@ $totalEnding = Product::sum('qty');
             $query->where('department_id', $request->department);
         }
 
-        // Pagination sama seperti index
-        $products = $query->orderBy('item_code')->paginate(10);
+        // Ambil semua data tanpa pagination (sama seperti informasi-stock)
+        $products = $query->orderBy('item_code')->get();
 
         // Data untuk filter dropdown (sama seperti index)
         $uoms = Product::select('uom')->whereNotNull('uom')->distinct()->pluck('uom');

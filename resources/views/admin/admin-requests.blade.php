@@ -13,7 +13,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>No</th><th>User</th><th>Note</th><th>Barang</th><th>Jumlah</th><th>Status</th><th>Aksi</th>
+                <th>No</th><th>User</th><th>Barang</th><th>Jumlah</th><th>Note (Item)</th><th>Status</th><th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -21,7 +21,6 @@
             <tr>
                 <td>{{ $loop->iteration }}</td>
                 <td>{{ $req->npk_nama ?? $req->user->name ?? '-' }}</td>
-                <td><small class="text-muted">{{ $req->note ?? '-' }}</small></td>
                 <td>
     @if($req->items->count() > 0)
         @foreach($req->items as $i)
@@ -36,6 +35,16 @@
     @if($req->items->count() > 0)
         @foreach($req->items as $i)
             • {{ $i->qty }} <br>
+        @endforeach
+    @else
+        -
+    @endif
+</td>
+
+<td>
+    @if($req->items->count() > 0)
+        @foreach($req->items as $i)
+            • {{ $i->note ?? '-' }} <br>
         @endforeach
     @else
         -
@@ -66,7 +75,7 @@
                 </td>
             </tr>
             @empty
-                <tr><td colspan="7" class="text-center">Tidak ada permintaan.</td></tr>
+                <tr><td colspan="8" class="text-center">Tidak ada permintaan.</td></tr>
             @endforelse
         </tbody>
     </table>

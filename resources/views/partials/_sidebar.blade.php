@@ -34,19 +34,17 @@
     <a href="{{ route('form-request-user') }}"
        class="nav-link {{ request()->routeIs('form-request-user') || request()->routeIs('requests.store') ? 'active' : '' }}">
         <i class="link-icon" data-feather="edit"></i>
-        <span class="link-title">Request By User</span>
+        <span class="link-title">Request Manual</span>
     </a>
 </li>
 
-      @if(auth()->user()->role === 'admin')
 <li class="nav-item {{ request()->routeIs('admin.form-request') || request()->routeIs('admin.store-request') || request()->routeIs('admin.get-product') ? 'active' : '' }}">
     <a href="{{ route('admin.form-request') }}"
        class="nav-link {{ request()->routeIs('admin.form-request') || request()->routeIs('admin.store-request') || request()->routeIs('admin.get-product') ? 'active' : '' }}">
         <i class="link-icon" data-feather="file-plus"></i>
-        <span class="link-title">Request By Admin</span>
+        <span class="link-title">Scan Barcode</span>
     </a>
 </li>
-@endif
 
       <li class="nav-item {{ request()->routeIs('informasi-stock') ? 'active' : '' }}">
         <a href="{{ route('informasi-stock') }}" class="nav-link {{ request()->routeIs('informasi-stock') ? 'active' : '' }}">
@@ -86,12 +84,6 @@
         <a href="{{ route('inventory-movements') }}" class="nav-link {{ request()->routeIs('inventory-movements') || request()->routeIs('inventory-items') || request()->routeIs('inventory-reports') ? 'active' : '' }}">
           <i class="link-icon" data-feather="refresh-cw"></i>
           <span class="link-title">Stock Movements</span>
-        </a>
-      </li>
-      <li class="nav-item {{ request()->routeIs('products.index') || request()->routeIs('products.create') || request()->routeIs('products.edit') || request()->routeIs('products.show') ? 'active' : '' }}">
-        <a href="{{ route('products.index') }}" class="nav-link {{ request()->routeIs('products.index') || request()->routeIs('products.create') || request()->routeIs('products.edit') || request()->routeIs('products.show') ? 'active' : '' }}">
-          <i class="link-icon" data-feather="list"></i>
-          <span class="link-title">Product List</span>
         </a>
       </li>
       @endif
