@@ -40,6 +40,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/requests', [ProductRequestController::class, 'store'])
     ->name('requests.store');
 
+    Route::post('/requests/quick', [ProductRequestController::class, 'quickStore'])
+        ->name('requests.quick-store');
+
 });
 
 /*
@@ -85,6 +88,22 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/requests/{id}/reject', [ProductRequestController::class, 'reject'])
         ->name('requests.reject');
 
+    // Edit & Delete Requests
+    Route::get('/requests/{id}/edit', [ProductRequestController::class, 'edit'])
+        ->name('requests.edit');
+    
+    Route::put('/requests/{id}', [ProductRequestController::class, 'update'])
+        ->name('requests.update');
+    
+    Route::delete('/requests/{id}', [ProductRequestController::class, 'destroy'])
+        ->name('requests.destroy');
+    
+    Route::delete('/requests/bulk-delete', [ProductRequestController::class, 'bulkDestroy'])
+        ->name('requests.bulkDestroy');
+    
+    Route::delete('/requests/destroy-all', [ProductRequestController::class, 'destroyAll'])
+        ->name('requests.destroyAll');
+
     // Export
     Route::get('/export/request', [ExportController::class, 'exportRequest'])
         ->name('export.request');
@@ -127,8 +146,29 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/user-informasi/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 });
 Route::get('/inventory-dashboard', [ProductController::class, 'inventoryDashboard'])->middleware('auth')->name('inventory-dashboard');
+Route::get('/stock-minim', [ProductController::class, 'stockMinim'])->middleware('auth')->name('stock-minim');
 Route::get('/inventory-items', fn() => view('pages.inventory-items'))->name('inventory-items');
-Route::get('/inventory-movements', [InventoryMovementController::class, 'index'])->middleware('auth')->name('inventory-movements');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/inventory-movements', [InventoryMovementController::class, 'index'])->name('inventory-movements');
+    
+    // Edit & Delete Movements (Admin only)
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/inventory-movements/{id}/edit', [InventoryMovementController::class, 'edit'])
+            ->name('movements.edit');
+        
+        Route::put('/inventory-movements/{id}', [InventoryMovementController::class, 'update'])
+            ->name('movements.update');
+        
+        Route::delete('/inventory-movements/{id}', [InventoryMovementController::class, 'destroy'])
+            ->name('movements.destroy');
+        
+        Route::delete('/inventory-movements/bulk-delete', [InventoryMovementController::class, 'bulkDestroy'])
+            ->name('movements.bulkDestroy');
+        
+        Route::delete('/inventory-movements/destroy-all', [InventoryMovementController::class, 'destroyAll'])
+            ->name('movements.destroyAll');
+    });
+});
 Route::get('/inventory-reports', fn() => view('pages.inventory-reports'))->name('inventory-reports');
 Route::get('/about', fn() => view('pages.about'))->name('about');
 Route::get('/contact', fn() => view('pages.contact'))->name('contact');

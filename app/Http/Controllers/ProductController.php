@@ -344,4 +344,65 @@ public function stockInfo(Request $request)
             'totalBalance'
         ));
     }
+
+    /**
+     * Stock Minim - Item yang mencapai titik order
+     */
+    public function stockMinim(Request $request)
+    {
+        $query = Product::with('department')
+            ->whereColumn('qty', '<=', 'titik_order')
+            ->whereNotNull('titik_order')
+            ->where('titik_order', '>', 0);
+
+        // Filter pencarian
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter Category
+        if ($request->filled('category') && $request->category !== '' && $request->category !== 'all') {
+            $query->where('category', $request->category);
+        }
+
+        // Filter Department
+        if ($request->filled('department') && $request->department !== '' && $request->department !== 'all') {
+            $query->where('department_id', $request->department);
+        }
+
+        // Ambil semua data tanpa pagination, urutkan berdasarkan prioritas (qty paling rendah dulu)
+        $products = $query->orderByRaw('(qty / NULLIF(titik_order, 0)) ASC')
+            ->orderBy('name')
+            ->get();
+
+        // Statistik
+        $totalKritikal = Product::whereColumn('qty', '<=', 'titik_order')
+            ->whereNotNull('titik_order')
+            ->where('titik_order', '>', 0)
+            ->count();
+        
+        $totalPeringatan = Product::whereColumn('qty', '>', 'titik_order')
+            ->whereColumn('qty', '<=', 'min_stock')
+            ->whereNotNull('min_stock')
+            ->where('min_stock', '>', 0)
+            ->count();
+
+        $outOfStock = Product::where('qty', '<=', 0)
+            ->whereNotNull('titik_order')
+            ->where('titik_order', '>', 0)
+            ->count();
+
+        // Data untuk filter
+        $categories = Product::select('category')
+            ->whereNotNull('category')
+            ->distinct()
+            ->pluck('category');
+        
+        $departments = Department::orderBy('name')->get();
+
+        return view('pages.stock-minim', compact(
+            'products', 'categories', 'departments',
+            'totalKritikal', 'totalPeringatan', 'outOfStock'
+        ));
+    }
 }

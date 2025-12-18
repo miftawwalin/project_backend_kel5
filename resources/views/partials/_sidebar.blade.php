@@ -53,6 +53,13 @@
         </a>
       </li>
 
+      <li class="nav-item {{ request()->routeIs('stock-minim') ? 'active' : '' }}">
+        <a href="{{ route('stock-minim') }}" class="nav-link {{ request()->routeIs('stock-minim') ? 'active' : '' }}">
+          <i class="link-icon" data-feather="alert-triangle"></i>
+          <span class="link-title">Stock Minim</span>
+        </a>
+      </li>
+
       @if(auth()->user()->role === 'admin')
 <li class="nav-item {{ request()->routeIs('requests.index') || request()->routeIs('requests.approve') || request()->routeIs('requests.reject') ? 'active' : '' }}">
     <a href="{{ route('requests.index') }}"

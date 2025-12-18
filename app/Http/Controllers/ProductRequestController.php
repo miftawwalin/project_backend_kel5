@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\ProductRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\ProductRequestItem;
 
 class ProductRequestController extends Controller
@@ -98,6 +99,70 @@ class ProductRequestController extends Controller
         }
 
         return redirect()->back()->with('success', 'Request berhasil dikirim');
+    }
+
+    /**
+     * QUICK STORE REQUEST - Untuk request langsung dari stock minim
+     */
+    public function quickStore(Request $request)
+    {
+        $request->validate([
+            'item_code' => 'required|string',
+            'qty' => 'required|integer|min:1',
+        ]);
+
+        try {
+            $product = Product::where('item_code', $request->item_code)->first();
+
+            if (!$product) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Item tidak ditemukan'
+                ], 404);
+            }
+
+            // Validasi qty tidak melebihi stock
+            if ($request->qty > $product->qty) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Qty tidak boleh melebihi stock yang tersedia! Stock tersedia: ' . $product->qty
+                ], 400);
+            }
+
+            // Buat header request
+            $header = ProductRequest::create([
+                'user_id' => Auth::id(),
+                'department_id' => Auth::user()->department_id,
+                'status' => 'pending',
+                'note' => 'Quick request dari Stock Minim',
+                'request_date' => now(),
+                'npk_nama' => Auth::user()->name . ' (NPK: ' . (Auth::user()->npk ?? '-') . ')'
+            ]);
+
+            // Simpan item
+            ProductRequestItem::create([
+                'product_request_id' => $header->id,
+                'product_id' => $product->id,
+                'qty' => $request->qty,
+                'validated' => false,
+                'note' => $request->note ?? null
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Request berhasil dikirim',
+                'data' => [
+                    'request_id' => $header->id,
+                    'qty' => $request->qty
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menyimpan request: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
 
@@ -301,5 +366,154 @@ class ProductRequestController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * EDIT REQUEST
+     */
+    public function edit($id)
+    {
+        $request = ProductRequest::with(['items.product', 'user', 'department'])->findOrFail($id);
+        $products = Product::with('department')->get();
+        return view('pages.edit-request', compact('request', 'products'));
+    }
+
+    /**
+     * UPDATE REQUEST
+     */
+    public function update(Request $request, $id)
+    {
+        $productRequest = ProductRequest::findOrFail($id);
+        
+        $request->validate([
+            'status' => 'required|in:pending,approved,rejected',
+            'note' => 'nullable|string|max:255',
+        ]);
+
+        // Jika status berubah dari approved ke rejected atau sebaliknya, update stock
+        if ($productRequest->status === 'approved' && $request->status !== 'approved') {
+            // Kembalikan stock
+            foreach ($productRequest->items as $item) {
+                $product = $item->product;
+                if ($product) {
+                    $product->qty += $item->qty;
+                    $product->save();
+                }
+            }
+        } elseif ($productRequest->status !== 'approved' && $request->status === 'approved') {
+            // Kurangi stock
+            foreach ($productRequest->items as $item) {
+                $product = $item->product;
+                if ($product && $product->qty >= $item->qty) {
+                    $product->qty -= $item->qty;
+                    $product->save();
+                } else {
+                    return back()->with('error', 'Stock tidak cukup untuk item ' . ($product->name ?? 'Unknown'));
+                }
+            }
+        }
+
+        $productRequest->update([
+            'status' => $request->status,
+            'note' => $request->note ?? $productRequest->note,
+            'approved_at' => $request->status === 'approved' ? now() : null,
+        ]);
+
+        return redirect()->route('requests.index')->with('success', 'Request berhasil diupdate');
+    }
+
+    /**
+     * DELETE REQUEST
+     */
+    public function destroy($id)
+    {
+        $productRequest = ProductRequest::findOrFail($id);
+        
+        DB::transaction(function () use ($productRequest) {
+            // Kembalikan stock jika approved
+            if ($productRequest->status === 'approved') {
+                foreach ($productRequest->items as $item) {
+                    $product = $item->product;
+                    if ($product) {
+                        $product->qty += $item->qty;
+                        $product->save();
+                    }
+                }
+            }
+            
+            // Hapus items terlebih dahulu
+            $productRequest->items()->delete();
+            // Hapus request
+            $productRequest->delete();
+        });
+
+        return redirect()->route('requests.index')->with('success', 'Request berhasil dihapus');
+    }
+
+    /**
+     * BULK DELETE REQUESTS
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        
+        if (empty($ids)) {
+            return back()->with('error', 'Tidak ada item yang dipilih');
+        }
+
+        $productRequests = ProductRequest::whereIn('id', $ids)->get();
+        
+        DB::transaction(function () use ($productRequests) {
+            foreach ($productRequests as $productRequest) {
+                // Kembalikan stock jika approved
+                if ($productRequest->status === 'approved') {
+                    foreach ($productRequest->items as $item) {
+                        $product = $item->product;
+                        if ($product) {
+                            $product->qty += $item->qty;
+                            $product->save();
+                        }
+                    }
+                }
+                
+                // Hapus items
+                $productRequest->items()->delete();
+                // Hapus request
+                $productRequest->delete();
+            }
+        });
+
+        return back()->with('success', count($ids) . ' request(s) berhasil dihapus');
+    }
+
+    /**
+     * DELETE ALL REQUESTS
+     */
+    public function destroyAll(Request $request)
+    {
+        $productRequests = ProductRequest::all();
+        $count = $productRequests->count();
+
+        DB::transaction(function () use ($productRequests) {
+            foreach ($productRequests as $productRequest) {
+                // Kembalikan stock jika approved
+                if ($productRequest->status === 'approved') {
+                    foreach ($productRequest->items as $item) {
+                        $product = $item->product;
+                        if ($product) {
+                            $product->qty += $item->qty;
+                            $product->save();
+                        }
+                    }
+                }
+                
+                // Hapus items
+                $productRequest->items()->delete();
+                // Hapus request
+                $productRequest->delete();
+            }
+        });
+
+        return back()->with('success', $count . ' request(s) berhasil dihapus');
     }
 }
