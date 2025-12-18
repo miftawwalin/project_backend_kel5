@@ -236,18 +236,15 @@ document.addEventListener('DOMContentLoaded', function() {
   const requestItemBtn = document.getElementById('requestItemBtn');
   const requestItemModal = document.getElementById('requestItemModal');
   
-  // if (requestItemBtn && requestItemModal) {
-  //   // Event listener untuk tombol REQUEST ITEM
-  //   requestItemBtn.addEventListener('click', function(e) {
-  //     e.preventDefault();
-  //     // Tampilkan alert sebelum membuka modal
-  //     alert("Silakan masukkan Item Code untuk melihat informasi produk dan stock yang tersedia.\n\nPastikan QTY yang diminta tidak melebihi stock yang tersedia!");
-      
-  //     // Buka modal setelah alert ditutup
-  //     const modal = new bootstrap.Modal(requestItemModal);
-  //     modal.show();
-  //   });
-  // }
+  if (requestItemBtn && requestItemModal) {
+    // Event listener untuk tombol REQUEST ITEM
+    requestItemBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      // Buka modal langsung tanpa alert
+      const modal = new bootstrap.Modal(requestItemModal);
+      modal.show();
+    });
+  }
   
   // Reset form saat modal ditutup atau dibuka
   if (requestItemModal) {
