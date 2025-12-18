@@ -79,7 +79,7 @@
           </div>
 
           <div class="mb-3">
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#requestItemModal">
+            <button type="button" class="btn btn-success" id="requestItemBtn">
               <i data-feather="plus"></i> REQUEST ITEM
             </button>
           </div>
@@ -156,21 +156,54 @@
           <label class="fw-bold mt-2">Nama Barang</label>
           <input type="text" id="namaBarang" class="form-control" readonly>
 
-          <label class="fw-bold mt-2">LOC</label>
-          <input type="text" id="loc" class="form-control" readonly>
+          <div class="row">
+            <div class="col-md-6">
+              <label class="fw-bold mt-2">Category</label>
+              <input type="text" id="category" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+              <label class="fw-bold mt-2">UOM (Unit of Measure)</label>
+              <input type="text" id="uom" class="form-control" readonly>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <label class="fw-bold mt-2">LOC (Location)</label>
+              <input type="text" id="loc" class="form-control" readonly>
+            </div>
+            <div class="col-md-6">
+              <label class="fw-bold mt-2">Department/User</label>
+              <input type="text" id="department" class="form-control" readonly>
+            </div>
+          </div>
+
+          <label class="fw-bold mt-2">Description</label>
+          <textarea id="description" class="form-control" rows="2" readonly></textarea>
 
           <div class="mb-2">
-            <label class="fw-bold mt-2">Stock Tersedia</label>
+            <label class="fw-bold mt-2">Stock Tersedia (dari Inventory Dashboard)</label>
             <div class="alert alert-info mb-2 py-2" id="stockInfo" style="display: none;">
-              <i data-feather="package"></i> <strong>Stock:</strong> <span id="stockDisplay">0</span>
+              <div class="d-flex align-items-center justify-content-between">
+                <div>
+                  <i data-feather="package"></i> <strong>Stock Tersedia:</strong> 
+                  <span id="stockDisplay" class="fw-bold fs-5">0</span>
+                  <span id="stockUOM" class="text-muted small ms-1"></span>
+                </div>
+                <div class="badge bg-primary" id="stockBadge" style="display: none;">Dari Inventory</div>
+              </div>
+            </div>
+            <div class="text-muted small" id="stockHint" style="display: none;">
+              <i data-feather="info"></i> Masukkan QTY tidak boleh melebihi stock yang tersedia di atas (sumber: Inventory Dashboard)
             </div>
           </div>
 
           <label class="fw-bold mt-2">QTY *</label>
-          <input type="number" id="qty" min="1" class="form-control" required>
+          <input type="number" id="qty" min="1" class="form-control" required placeholder="Masukkan jumlah yang diminta">
           <div class="invalid-feedback" id="qtyError" style="display: none;">
             Qty tidak boleh melebihi stock yang tersedia!
           </div>
+          <small class="text-muted" id="qtyHint">Maksimal: <span id="maxStockDisplay" class="fw-bold">0</span></small>
           <input type="hidden" id="maxStock" value="0">
 
           <label class="fw-bold mt-2">NPK / Nama *</label>
@@ -199,28 +232,68 @@ document.addEventListener('DOMContentLoaded', function() {
     feather.replace();
   }
   
-  // Reset form saat modal ditutup atau dibuka
+  // Handler untuk tombol REQUEST ITEM
+  const requestItemBtn = document.getElementById('requestItemBtn');
   const requestItemModal = document.getElementById('requestItemModal');
+  
+  // if (requestItemBtn && requestItemModal) {
+  //   // Event listener untuk tombol REQUEST ITEM
+  //   requestItemBtn.addEventListener('click', function(e) {
+  //     e.preventDefault();
+  //     // Tampilkan alert sebelum membuka modal
+  //     alert("Silakan masukkan Item Code untuk melihat informasi produk dan stock yang tersedia.\n\nPastikan QTY yang diminta tidak melebihi stock yang tersedia!");
+      
+  //     // Buka modal setelah alert ditutup
+  //     const modal = new bootstrap.Modal(requestItemModal);
+  //     modal.show();
+  //   });
+  // }
+  
+  // Reset form saat modal ditutup atau dibuka
   if (requestItemModal) {
     requestItemModal.addEventListener('hidden.bs.modal', function() {
+      // Reset semua field saat modal ditutup
       document.getElementById('requestItemForm').reset();
+      document.getElementById("namaBarang").value = '';
+      document.getElementById("category").value = '';
+      document.getElementById("uom").value = '';
+      document.getElementById("loc").value = '';
+      document.getElementById("description").value = '';
+      document.getElementById("department").value = '';
       document.getElementById("stockInfo").style.display = 'none';
+      document.getElementById("stockHint").style.display = 'none';
+      document.getElementById("stockBadge").style.display = 'none';
+      document.getElementById("stockUOM").textContent = '';
       document.getElementById("maxStock").value = 0;
+      document.getElementById("maxStockDisplay").textContent = '0';
       currentStock = 0;
       document.getElementById('qty').classList.remove('is-invalid');
       document.getElementById('qtyError').style.display = 'none';
       document.getElementById('qty').removeAttribute('max');
+      document.getElementById('qty').removeAttribute('readonly');
     });
     
     requestItemModal.addEventListener('show.bs.modal', function() {
-      // Reset form saat modal dibuka
+      // Reset semua field saat modal dibuka
       document.getElementById('requestItemForm').reset();
+      document.getElementById("namaBarang").value = '';
+      document.getElementById("category").value = '';
+      document.getElementById("uom").value = '';
+      document.getElementById("loc").value = '';
+      document.getElementById("description").value = '';
+      document.getElementById("department").value = '';
       document.getElementById("stockInfo").style.display = 'none';
+      document.getElementById("stockHint").style.display = 'none';
+      document.getElementById("stockBadge").style.display = 'none';
+      document.getElementById("stockUOM").textContent = '';
       document.getElementById("maxStock").value = 0;
+      document.getElementById("maxStockDisplay").textContent = '0';
       currentStock = 0;
       document.getElementById('qty').classList.remove('is-invalid');
       document.getElementById('qtyError').style.display = 'none';
       document.getElementById('qty').removeAttribute('max');
+      document.getElementById('qty').removeAttribute('readonly');
+      document.getElementById('qty').setAttribute('placeholder', 'Masukkan jumlah yang diminta');
     });
   }
 });
@@ -232,6 +305,7 @@ let currentStock = 0; // Menyimpan stock saat ini
 function addRowWarning() {
   alert("Gunakan tombol REQUEST ITEM untuk menambah item.");
 }
+
 
 function selectProduksi(x) {
   document.getElementById('produksiButton').textContent = x;
@@ -295,45 +369,99 @@ function startScanner() {
    AJAX GET PRODUCT FROM DATABASE
 ============================== */
 function fetchProduct(code) {
+  // Tampilkan loading indicator (optional)
+  const stockInfo = document.getElementById("stockInfo");
+  stockInfo.style.display = 'block';
+  stockInfo.className = 'alert alert-secondary mb-2 py-2';
+  document.getElementById("stockDisplay").textContent = 'Memuat...';
+  
   fetch(`/admin/get-product/${code}`)
     .then(res => res.json())
     .then(res => {
       if (!res.status) {
         alert("Item tidak ditemukan!");
-        // Reset form jika item tidak ditemukan
+        // Reset semua field jika item tidak ditemukan
         document.getElementById("namaBarang").value = '';
-        document.getElementById("loc").value = '';
+        document.getElementById("category").value = '';
         document.getElementById("uom").value = '';
+        document.getElementById("loc").value = '';
+        document.getElementById("description").value = '';
+        document.getElementById("department").value = '';
         document.getElementById("stockInfo").style.display = 'none';
+        document.getElementById("stockHint").style.display = 'none';
         document.getElementById("maxStock").value = 0;
+        document.getElementById("maxStockDisplay").textContent = '0';
         currentStock = 0;
+        document.getElementById("qty").setAttribute('placeholder', 'Masukkan jumlah yang diminta');
         return;
       }
 
       let p = res.data;
 
-      document.getElementById("namaBarang").value = p.name;
-      document.getElementById("loc").value = p.loc || '';
+      // Isi semua field otomatis dari database product
+      document.getElementById("namaBarang").value = p.name || '';
+      document.getElementById("category").value = p.category || '';
       document.getElementById("uom").value = p.uom || '';
+      document.getElementById("loc").value = p.loc || '';
+      document.getElementById("description").value = p.description || '';
+      document.getElementById("department").value = p.department_name || '-';
       
-      // Set stock (gunakan qty dari database)
+      // Set stock (gunakan qty dari database - SAMA dengan kolom QTY di inventory-dashboard)
+      // Stock ini diambil dari kolom 'qty' di tabel products yang sama dengan yang ditampilkan di inventory-dashboard
       currentStock = parseInt(p.qty) || 0;
       document.getElementById("maxStock").value = currentStock;
       
-      // Tampilkan stock info
-      const stockInfo = document.getElementById("stockInfo");
+      // Tampilkan stock info dengan lebih jelas dan menonjol
       const stockDisplay = document.getElementById("stockDisplay");
-      stockDisplay.textContent = currentStock.toLocaleString('id-ID');
-      stockInfo.style.display = 'block';
+      const stockHint = document.getElementById("stockHint");
+      const maxStockDisplay = document.getElementById("maxStockDisplay");
+      const stockUOM = document.getElementById("stockUOM");
+      const stockBadge = document.getElementById("stockBadge");
       
-      // Update class alert berdasarkan stock
+      // Format stock dengan pemisah ribuan
+      const formattedStock = currentStock.toLocaleString('id-ID');
+      stockDisplay.textContent = formattedStock;
+      maxStockDisplay.textContent = formattedStock;
+      
+      // Tampilkan UOM jika ada
+      if (p.uom) {
+        stockUOM.textContent = `(${p.uom})`;
+      } else {
+        stockUOM.textContent = '';
+      }
+      
+      // Tampilkan semua elemen stock info
+      stockInfo.style.display = 'block';
+      stockHint.style.display = 'block';
+      stockBadge.style.display = 'inline-block';
+      
+      // Update class alert berdasarkan stock (sama dengan logic di inventory-dashboard)
       if (currentStock <= 0) {
+        // OUT OF STOCK - sama dengan status "Out" di inventory-dashboard
         stockInfo.className = 'alert alert-danger mb-2 py-2';
         stockDisplay.textContent = '0 (OUT OF STOCK)';
+        maxStockDisplay.textContent = '0';
+        document.getElementById("qty").setAttribute('max', 0);
+        document.getElementById("qty").setAttribute('readonly', true);
+        document.getElementById("qty").setAttribute('placeholder', 'Stock tidak tersedia');
+        stockBadge.className = 'badge bg-danger';
+        stockBadge.textContent = 'OUT OF STOCK';
       } else if (currentStock < (p.min_stock || 0)) {
+        // LOW STOCK - sama dengan status "Low" di inventory-dashboard
         stockInfo.className = 'alert alert-warning mb-2 py-2';
+        document.getElementById("qty").setAttribute('max', currentStock);
+        document.getElementById("qty").removeAttribute('readonly');
+        document.getElementById("qty").setAttribute('placeholder', `Maksimal ${formattedStock} (Low Stock)`);
+        stockBadge.className = 'badge bg-warning text-dark';
+        stockBadge.textContent = 'LOW STOCK';
       } else {
-        stockInfo.className = 'alert alert-info mb-2 py-2';
+        // STOCK OK - sama dengan status "OK" di inventory-dashboard
+        stockInfo.className = 'alert alert-success mb-2 py-2';
+        document.getElementById("qty").setAttribute('max', currentStock);
+        document.getElementById("qty").removeAttribute('readonly');
+        document.getElementById("qty").setAttribute('placeholder', `Maksimal ${formattedStock} (sesuai stock tersedia)`);
+        stockBadge.className = 'badge bg-success';
+        stockBadge.textContent = 'STOCK OK';
       }
       
       // Reset qty dan validasi
@@ -341,40 +469,117 @@ function fetchProduct(code) {
       document.getElementById("qty").classList.remove('is-invalid');
       document.getElementById("qtyError").style.display = 'none';
       
-      // Set max attribute pada input qty
-      document.getElementById("qty").setAttribute('max', currentStock);
+      // Re-initialize feather icons untuk icon package dan info
+      if (typeof feather !== 'undefined') {
+        feather.replace();
+      }
+      
+      // Scroll ke stock info agar user melihat stock yang tersedia
+      document.getElementById("stockInfo").scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     })
     .catch(err => {
       console.error(err);
       alert("Terjadi kesalahan saat mengambil data produk!");
+      document.getElementById("stockInfo").style.display = 'none';
+      document.getElementById("stockHint").style.display = 'none';
     });
 }
 
-document.getElementById("itemCode").addEventListener("change", function(){
-  let code = this.value.trim();
-  if (code.length >= 3) fetchProduct(code);
-});
-
-// Validasi QTY real-time
-document.getElementById("qty").addEventListener("input", function(){
-  const qty = parseInt(this.value) || 0;
-  const maxStock = parseInt(document.getElementById("maxStock").value) || 0;
-  const qtyInput = this;
-  const qtyError = document.getElementById("qtyError");
+// Event listener untuk Item Code - trigger saat change atau blur
+const itemCodeInput = document.getElementById("itemCode");
+if (itemCodeInput) {
+  // Trigger saat user mengetik dan menekan Enter atau Tab
+  itemCodeInput.addEventListener("change", function(){
+    let code = this.value.trim();
+    if (code.length >= 3) {
+      fetchProduct(code);
+    } else if (code.length > 0) {
+      // Reset jika code terlalu pendek
+      document.getElementById("stockInfo").style.display = 'none';
+      document.getElementById("stockHint").style.display = 'none';
+      document.getElementById("maxStock").value = 0;
+      document.getElementById("maxStockDisplay").textContent = '0';
+    }
+  });
   
-  if (qty > maxStock && maxStock > 0) {
-    qtyInput.classList.add('is-invalid');
-    qtyError.style.display = 'block';
-    qtyError.textContent = `Qty tidak boleh melebihi stock yang tersedia! Stock tersedia: ${maxStock.toLocaleString('id-ID')}`;
-  } else if (qty <= 0) {
-    qtyInput.classList.add('is-invalid');
-    qtyError.style.display = 'block';
-    qtyError.textContent = 'Qty harus lebih dari 0!';
-  } else {
-    qtyInput.classList.remove('is-invalid');
+  // Trigger juga saat blur (ketika field kehilangan fokus)
+  itemCodeInput.addEventListener("blur", function(){
+    let code = this.value.trim();
+    if (code.length >= 3) {
+      fetchProduct(code);
+    }
+  });
+  
+  // Trigger juga saat Enter ditekan
+  itemCodeInput.addEventListener("keypress", function(e){
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      let code = this.value.trim();
+      if (code.length >= 3) {
+        fetchProduct(code);
+      }
+    }
+  });
+}
+
+// Validasi QTY real-time - dipanggil setiap kali QTY diubah
+const qtyInput = document.getElementById("qty");
+if (qtyInput) {
+  qtyInput.addEventListener("input", function(){
+    const qty = parseInt(this.value) || 0;
+    const maxStock = parseInt(document.getElementById("maxStock").value) || 0;
+    const qtyError = document.getElementById("qtyError");
+    
+    // Validasi: QTY harus lebih dari 0
+    if (qty <= 0 && this.value !== '') {
+      this.classList.add('is-invalid');
+      qtyError.style.display = 'block';
+      qtyError.textContent = 'Qty harus lebih dari 0!';
+      return;
+    }
+    
+    // Validasi: QTY tidak boleh melebihi stock yang tersedia
+    if (qty > maxStock && maxStock > 0) {
+      this.classList.add('is-invalid');
+      qtyError.style.display = 'block';
+      qtyError.textContent = `Qty tidak boleh melebihi stock yang tersedia! Stock tersedia: ${maxStock.toLocaleString('id-ID')}`;
+      return;
+    }
+    
+    // Jika stock 0 atau kosong
+    if (maxStock <= 0) {
+      this.classList.add('is-invalid');
+      qtyError.style.display = 'block';
+      qtyError.textContent = 'Stock tidak tersedia! Tidak dapat meminta item ini.';
+      return;
+    }
+    
+    // Validasi berhasil
+    this.classList.remove('is-invalid');
     qtyError.style.display = 'none';
-  }
-});
+  });
+  
+  // Validasi juga saat blur (ketika field kehilangan fokus)
+  qtyInput.addEventListener("blur", function(){
+    const qty = parseInt(this.value) || 0;
+    const maxStock = parseInt(document.getElementById("maxStock").value) || 0;
+    const qtyError = document.getElementById("qtyError");
+    
+    if (qty > maxStock && maxStock > 0) {
+      this.classList.add('is-invalid');
+      qtyError.style.display = 'block';
+      qtyError.textContent = `Qty tidak boleh melebihi stock yang tersedia! Stock tersedia: ${maxStock.toLocaleString('id-ID')}`;
+    } else if (qty <= 0 && this.value !== '') {
+      this.classList.add('is-invalid');
+      qtyError.style.display = 'block';
+      qtyError.textContent = 'Qty harus lebih dari 0!';
+    } else if (maxStock <= 0 && this.value !== '') {
+      this.classList.add('is-invalid');
+      qtyError.style.display = 'block';
+      qtyError.textContent = 'Stock tidak tersedia! Tidak dapat meminta item ini.';
+    }
+  });
+}
 
 /* ==============================
    TAMBAH ITEM KE TABLE
@@ -401,11 +606,23 @@ function addRequestItem() {
     return;
   }
 
-  // Validasi qty tidak boleh melebihi stock
+  // Validasi qty tidak boleh melebihi stock (stock dari inventory-dashboard)
   if (qty > maxStock) {
-    alert(`Qty tidak boleh melebihi stock yang tersedia!\nStock tersedia: ${maxStock.toLocaleString('id-ID')}\nQty yang diminta: ${qty.toLocaleString('id-ID')}`);
+    alert(`Qty tidak boleh melebihi stock yang tersedia!\n\nStock tersedia (dari Inventory Dashboard): ${maxStock.toLocaleString('id-ID')}\nQty yang diminta: ${qty.toLocaleString('id-ID')}\n\nSilakan kurangi qty yang diminta.`);
     document.getElementById('qty').focus();
     document.getElementById('qty').classList.add('is-invalid');
+    document.getElementById('qtyError').style.display = 'block';
+    document.getElementById('qtyError').textContent = `Qty tidak boleh melebihi stock yang tersedia! Stock tersedia: ${maxStock.toLocaleString('id-ID')}`;
+    return;
+  }
+  
+  // Validasi jika stock 0 atau tidak tersedia
+  if (maxStock <= 0) {
+    alert(`Stock tidak tersedia untuk item ini!\n\nStock tersedia: 0\n\nTidak dapat meminta item dengan stock 0.`);
+    document.getElementById('qty').focus();
+    document.getElementById('qty').classList.add('is-invalid');
+    document.getElementById('qtyError').style.display = 'block';
+    document.getElementById('qtyError').textContent = 'Stock tidak tersedia! Tidak dapat meminta item ini.';
     return;
   }
 

@@ -225,7 +225,8 @@ class ProductRequestController extends Controller
  */
 public function getProduct($code)
 {
-    $product = Product::where('item_code', $code)->first();
+    // Load product dengan relasi department untuk mendapatkan nama department
+    $product = Product::with('department')->where('item_code', $code)->first();
 
     if (!$product) {
         return response()->json([
@@ -234,9 +235,25 @@ public function getProduct($code)
         ]);
     }
 
+    // Return semua data product termasuk relasi department
     return response()->json([
         'status' => true,
-        'data' => $product
+        'data' => [
+            'id' => $product->id,
+            'item_code' => $product->item_code,
+            'name' => $product->name,
+            'description' => $product->description,
+            'category' => $product->category,
+            'qty' => $product->qty,
+            'stock' => $product->stock,
+            'min_stock' => $product->min_stock,
+            'stock_max' => $product->stock_max,
+            'titik_order' => $product->titik_order,
+            'uom' => $product->uom,
+            'loc' => $product->loc,
+            'department_id' => $product->department_id,
+            'department_name' => $product->department ? $product->department->name : null,
+        ]
     ]);
 }
 
